@@ -8,6 +8,7 @@ import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VideoListActivity extends AppCompatActivity {
 
@@ -26,9 +27,8 @@ public class VideoListActivity extends AppCompatActivity {
         parser.onFinish(new Parser.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(ArrayList<Article> list) {
-                String title = list.get(0).getTitle();
-                TextView rssInfo = (TextView) findViewById(R.id.rssInfo);
-                rssInfo.setText(title);
+                Episode.saveEpisodesFromRSS(list);
+                printAllTitles();
             }
 
             @Override
@@ -36,5 +36,15 @@ public class VideoListActivity extends AppCompatActivity {
                 //log.e('rss error', 'Some error')
             }
         });
+    }
+
+    private void printAllTitles(){
+        List<Episode> episodes = Episode.listAll(Episode.class);
+        String display = "";
+        for(Episode episode : episodes){
+            display += String.valueOf(episode.getId()) + " " + episode.getTitle() + "\n";
+        }
+        TextView tv = (TextView) findViewById(R.id.rssInfo);
+        tv.setText(display);
     }
 }

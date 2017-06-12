@@ -29,4 +29,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'com.prof.rssparser:rssparser:1.0'
+    compile 'com.github.satyan:sugar:1.3'
 }
