@@ -42,7 +42,11 @@ public class VideoListActivity extends AppCompatActivity {
         List<Episode> episodes = Episode.listAll(Episode.class);
         String display = "";
         for(Episode episode : episodes){
-            display += String.valueOf(episode.getId()) + " " + episode.getTitle() + "\n";
+            display += String.valueOf(episode.getId()) + " " + episode.getTitle() + ". Cat: ";
+            if(episode.bibleBook == null)
+                display += "Other\n";
+            else
+                display += episode.bibleBook + "\n";
         }
         TextView tv = (TextView) findViewById(R.id.rssInfo);
         tv.setText(display);
