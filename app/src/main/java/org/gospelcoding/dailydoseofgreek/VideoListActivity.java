@@ -2,6 +2,9 @@ package org.gospelcoding.dailydoseofgreek;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.prof.rssparser.Article;
@@ -12,12 +15,18 @@ import java.util.List;
 
 public class VideoListActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
 
-        loadSomeRSS();
+        List<Episode> episodes = Episode.listAll(Episode.class);
+        ArrayAdapter<Episode> episodesAdapter = new ArrayAdapter<Episode>(this,
+                android.R.layout.simple_list_item_1, episodes);
+        ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
+        episodesView.setAdapter(episodesAdapter);
     }
 
     private void loadSomeRSS(){
@@ -48,7 +57,7 @@ public class VideoListActivity extends AppCompatActivity {
             else
                 display += episode.bibleBook + "\n";
         }
-        TextView tv = (TextView) findViewById(R.id.rssInfo);
-        tv.setText(display);
+        //TextView tv = (TextView) findViewById(R.id.rssInfo);
+        //tv.setText(display);
     }
 }

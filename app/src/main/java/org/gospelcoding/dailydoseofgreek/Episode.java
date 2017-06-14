@@ -68,6 +68,9 @@ public class Episode extends SugarRecord<Episode> {
         }
     }
 
+    public String toString(){
+        return title;
+    }
     //Accessors
     public String getTitle(){
         return title;
