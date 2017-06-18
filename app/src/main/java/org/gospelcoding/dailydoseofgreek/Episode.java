@@ -1,8 +1,15 @@
 package org.gospelcoding.dailydoseofgreek;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.prof.rssparser.Article;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class Episode extends SugarRecord<Episode> {
     String title;
-    String vimeoId;
+    String vimeoUrl;
     String ddgUrl;
     long pubDate;
     long lastWatched;
@@ -57,15 +64,16 @@ public class Episode extends SugarRecord<Episode> {
         return true;
     }
 
-    public static void saveEpisodesFromRSS(ArrayList<Article> articles){
+    public static ArrayList<Episode> saveEpisodesFromRSS(ArrayList<Article> articles){
+        ArrayList<Episode> newEpisodes = new ArrayList<Episode>();
         for (Article article: articles) {
             Episode episode = new Episode(article.getTitle(),
                                             article.getLink(),
                                             article.getPubDate());
-            boolean savedNewEpisode = episode.saveIfNew();
-            if(!savedNewEpisode)  //that is, we're done
-                return;
+            if(episode.saveIfNew())
+                newEpisodes.add(episode);
         }
+        return newEpisodes;
     }
 
     public String toString(){
