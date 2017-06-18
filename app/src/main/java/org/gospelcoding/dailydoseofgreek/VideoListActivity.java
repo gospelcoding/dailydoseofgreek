@@ -1,6 +1,7 @@
 package org.gospelcoding.dailydoseofgreek;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import java.util.List;
 
 public class VideoListActivity extends AppCompatActivity {
 
+    public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydoseofgreek.vimeo_url";
+
     ArrayAdapter<Episode> episodesAdapter;
 
     @Override
@@ -36,7 +39,7 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private void loadEpisodes(){
-        List<Episode> episodes = Episode.listAll(Episode.class);
+        List<Episode> episodes = Episode.listAllInOrder();
         episodesAdapter = new ArrayAdapter<Episode>(this,
                 android.R.layout.simple_list_item_1, episodes);
         ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
@@ -65,17 +68,20 @@ public class VideoListActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.e("DDG Debug", "Clicked on episode at position: " + String.valueOf(position));
             Episode clickedEpisode = episodesAdapter.getItem(position);
-            if(clickedEpisode.vimeoUrl != null) {
-                Toast toast = Toast.makeText(parent.getContext(), "VimeoUrl is " + clickedEpisode.vimeoUrl, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            else{
-                new FetchVimeoUrlTask(parent.getContext()).execute(clickedEpisode);
-            }
+            if(clickedEpisode.vimeoUrl != null)
+                launchPlayEpisodeActivity(clickedEpisode.vimeoUrl);
+            else
+                new FetchVimeoUrlTask(parent.getContext(), true).execute(clickedEpisode);
         }
     };
+
+
+    private void launchPlayEpisodeActivity(String vimeoUrl){
+        Intent intent = new Intent(this, PlayEpisodeActivity.class);
+        intent.putExtra(VIMEO_URL_EXTRA, vimeoUrl);
+        startActivity(intent);
+    }
 
     private void printAllTitles(){
         List<Episode> episodes = Episode.listAll(Episode.class);
@@ -93,10 +99,12 @@ public class VideoListActivity extends AppCompatActivity {
 
     private class FetchVimeoUrlTask extends AsyncTask<Episode, Void, String[]> {
         private Context context;
+        private boolean playWhenDone;
 
-        public FetchVimeoUrlTask(Context cxt){
+        public FetchVimeoUrlTask(Context context, boolean playWhenDone){
             super();
-            context = cxt;
+            this.context = context;
+            this.playWhenDone = playWhenDone;
         }
 
         protected String[] doInBackground(Episode... episodes){
@@ -127,13 +135,12 @@ public class VideoListActivity extends AppCompatActivity {
 
         protected void onPostExecute(String[] vimeoUrls){
             //Just going to show the first
-            String msg;
-            if(vimeoUrls[0] != null)
-                msg = "Vimeo Url: " + vimeoUrls[0];
-            else
-                msg = "Unable to fetch vimeoUrl";
-            Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-            toast.show();
+            if(playWhenDone){
+                if(vimeoUrls[0] != null)
+                    launchPlayEpisodeActivity(vimeoUrls[0]);
+                else
+                    Toast.makeText(context, "Unable to retrieve video", Toast.LENGTH_SHORT).show();
+            }
         }
 
 

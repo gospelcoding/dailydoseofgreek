@@ -3,21 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.gospelcoding.dailydoseofgreek">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        tools:replace="android:icon"
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="com.orm.SugarApp">
-        <meta-data android:name="DATABASE" android:value="daily_dose.db" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="org.gospelcoding" />
+        tools:replace="android:icon">
+        <meta-data
+            android:name="DATABASE"
+            android:value="daily_dose.db" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="org.gospelcoding" />
 
         <activity android:name=".VideoListActivity">
             <intent-filter>
@@ -26,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PlayEpisodeActivity"></activity>
     </application>
 
 </manifest>

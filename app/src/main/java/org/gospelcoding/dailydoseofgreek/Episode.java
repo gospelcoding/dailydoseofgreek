@@ -76,6 +76,10 @@ public class Episode extends SugarRecord<Episode> {
         return newEpisodes;
     }
 
+    public static List<Episode> listAllInOrder(){
+        return find(Episode.class, null, null, null, "pub_date DESC", null);
+    }
+
     public String toString(){
         return title;
     }
