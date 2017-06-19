@@ -2,6 +2,8 @@ package org.gospelcoding.dailydoseofgreek;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 public class PlayEpisodeActivity extends AppCompatActivity {
@@ -20,9 +22,19 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     }
 
     private void loadVideo(){
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient(){
+            public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback){
+                //what?
+            }
+
+            public void onHideCustomView(View view, WebChromeClient.CustomViewCallback callback){
+                //and.......what?
+            }
+        });
         String html = "<iframe src=\"" +
                 vimeoUrl +
-                "\" width=\"1080\" height=\"608\" " +
+                "\"  width=\"100%\" " +
                 "frameborder=\"0\" title=\"Video Title\" " +
                 "webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
         //webView.setJavascriptenabled();
