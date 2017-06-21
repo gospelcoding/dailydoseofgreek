@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Daily Dose of Greek</string>
+    <string name="fetch_more">Fetch More</string>
+    <string name="fetch_all">Fetch All</string>
 </resources>
