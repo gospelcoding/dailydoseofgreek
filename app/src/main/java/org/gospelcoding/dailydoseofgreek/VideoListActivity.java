@@ -22,10 +22,14 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VideoListActivity extends AppCompatActivity {
 
     public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydoseofgreek.vimeo_url";
+    private boolean downloadingAll = false;
+    private int currentPage = 0;
 
     ArrayAdapter<Episode> episodesAdapter;
 
@@ -35,7 +39,7 @@ public class VideoListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_list);
 
         loadEpisodes();
-        loadSomeRSS();
+        loadSomeRSS(1);
     }
 
     private void loadEpisodes(){
@@ -47,15 +51,29 @@ public class VideoListActivity extends AppCompatActivity {
         episodesView.setOnItemClickListener(episodeClickListener);
     }
 
-    private void loadSomeRSS(){
+    public void fetchAllEpisodes(View v){
+        downloadingAll = true;
+        currentPage = 1;
+        loadSomeRSS(currentPage);
+    }
+
+    private void loadSomeRSS(int page){
         String urlString = "http://dailydoseofgreek.com/feed";
+        if(page > 1)
+            urlString += "/?paged=" + String.valueOf(page);
         Parser parser = new Parser();
         parser.execute(urlString);
         parser.onFinish(new Parser.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(ArrayList<Article> list) {
+                if(episodesNotFound(list))
+                    return;
                 ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(list);
                 episodesAdapter.addAll(newEpisodes);
+                if(downloadingAll) {
+                    ++currentPage;
+                    loadSomeRSS(currentPage);
+                }
             }
 
             @Override
@@ -63,6 +81,14 @@ public class VideoListActivity extends AppCompatActivity {
                 Log.e("DDG RSS Error", "Some error");
             }
         });
+    }
+
+    private boolean episodesNotFound(ArrayList<Article> list){
+        Pattern failPattern = Pattern.compile("404 Not Found");
+        Matcher m = failPattern.matcher(list.get(0).getTitle());
+        if(m.find())
+            return true;
+        return false;
     }
 
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
