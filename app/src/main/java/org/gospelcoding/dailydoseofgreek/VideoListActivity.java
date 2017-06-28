@@ -84,6 +84,8 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private boolean episodesNotFound(ArrayList<Article> list){
+        if(list.size() == 0)
+            return true;
         Pattern failPattern = Pattern.compile("404 Not Found");
         Matcher m = failPattern.matcher(list.get(0).getTitle());
         if(m.find())
