@@ -1,11 +1,13 @@
 package org.gospelcoding.dailydoseofgreek;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 public class PlayEpisodeActivity extends AppCompatActivity {
 
@@ -36,24 +38,9 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         //loadVideo();
     }
 
-    private void loadVideo(){
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient(){
-            public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback){
-                //what?
-            }
-
-            public void onHideCustomView(View view, WebChromeClient.CustomViewCallback callback){
-                //and.......what?
-            }
-        });
-        String html = "<iframe src=\"" +
-                vimeoUrl +
-                "\"  width=\"100%\" " +
-                "frameborder=\"0\" title=\"Video Title\" " +
-                "webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
-        //webView.setJavascriptenabled();
-        webView.loadData(html, "text/html", null);
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        //Toast.makeText(this, "Config change", Toast.LENGTH_SHORT).show();
     }
 }

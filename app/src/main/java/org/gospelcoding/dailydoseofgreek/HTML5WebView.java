@@ -186,11 +186,11 @@ public class HTML5WebView extends WebView {
             return mVideoProgressView;
         }
 
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            Log.d(TAG,"onReceivedTitle");
-            ((Activity) mContext).setTitle(title);
-        }
+//        @Override
+//        public void onReceivedTitle(WebView view, String title) {
+//            Log.d(TAG,"onReceivedTitle");
+//            ((Activity) mContext).setTitle(title);
+//        }
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
