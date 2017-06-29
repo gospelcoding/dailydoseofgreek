@@ -12,18 +12,8 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     HTML5WebView webView;
     String vimeoUrl;
 
-    String html1 = "<!DOCTYPE html>" +
-                    "<html>" +
-                    "<head>" +
-                    "</head>" +
-                    "<body>" +
-		            "<div class=\"videoOut\">" +
-			        "<iframe id=\"player_1\" src=\"";
-    String html2 = "?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23&amp;player_id=player_1\" width=\"100%\" height=\"50%\" frameborder=\"0\" webkitAllowFullScreen mozallowfullscreen allowFullScreen>" +
-	                "</iframe>" +
-		            "</div>" +
-	                "</body>" +
-                    "</html>";
+    String html1 = "<!DOCTYPE html><html><style>html, body{height: 100%;} iframe{height: 100%; width: 100%}</style><body><iframe src='";
+    String html2 = "?autoplay=1' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></body></html>";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
