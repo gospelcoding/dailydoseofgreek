@@ -1,5 +1,7 @@
 package org.gospelcoding.dailydoseofgreek;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,6 +23,8 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,59 +32,22 @@ import java.util.regex.Pattern;
 public class VideoListActivity extends AppCompatActivity {
 
     public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydoseofgreek.vimeo_url";
-    private boolean downloadingAll = false;
-    private int currentPage = 0;
-
     ArrayAdapter<Episode> episodesAdapter;
+    DDGNetworkHelper networkHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
 
-        loadEpisodes();
-        loadSomeRSS(1);
-    }
+        networkHelper = new DDGNetworkHelper();
 
-    private void loadEpisodes(){
-        List<Episode> episodes = Episode.listAllInOrder();
-        episodesAdapter = new ArrayAdapter<Episode>(this,
-                android.R.layout.simple_list_item_1, episodes);
-        ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
-        episodesView.setAdapter(episodesAdapter);
-        episodesView.setOnItemClickListener(episodeClickListener);
+        new LoadEpisodesFromDB().execute();
+        setAlarmIfNecessary();
     }
 
     public void fetchAllEpisodes(View v){
-        downloadingAll = true;
-        currentPage = 1;
-        loadSomeRSS(currentPage);
-    }
-
-    private void loadSomeRSS(int page){
-        String urlString = "http://dailydoseofgreek.com/feed";
-        if(page > 1)
-            urlString += "/?paged=" + String.valueOf(page);
-        Parser parser = new Parser();
-        parser.execute(urlString);
-        parser.onFinish(new Parser.OnTaskCompleted() {
-            @Override
-            public void onTaskCompleted(ArrayList<Article> list) {
-                if(episodesNotFound(list))
-                    return;
-                ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(list);
-                episodesAdapter.addAll(newEpisodes);
-                if(downloadingAll) {
-                    ++currentPage;
-                    loadSomeRSS(currentPage);
-                }
-            }
-
-            @Override
-            public void onError() {
-                Log.e("DDG RSS Error", "Some error");
-            }
-        });
+        networkHelper.fetchAllEpisodes(episodesAdapter);
     }
 
     private boolean episodesNotFound(ArrayList<Article> list){
@@ -125,6 +92,53 @@ public class VideoListActivity extends AppCompatActivity {
         //tv.setText(display);
     }
 
+    private void setAlarmIfNecessary(){
+        Intent intent = new Intent(this, FeedChecker.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                         nextCalendarAtTime(10, 15).getTimeInMillis(),
+                                         AlarmManager.INTERVAL_DAY,
+                                         alarmIntent);
+    }
+
+    private Calendar nextCalendarAtTime(int hour, int minute){
+        Calendar now = Calendar.getInstance();
+        Calendar rVal = Calendar.getInstance();
+        rVal.set(Calendar.HOUR_OF_DAY, hour);
+        rVal.set(Calendar.MINUTE, minute);
+        if(now.getTimeInMillis() > rVal.getTimeInMillis())
+            rVal.add(Calendar.DAY_OF_MONTH, 1);
+        return rVal;
+    }
+
+    private void setupEpisodesAdapter(List<Episode> episodes){
+        episodesAdapter = new ArrayAdapter<Episode>(this,
+                android.R.layout.simple_list_item_1, episodes);
+        ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
+        episodesView.setAdapter(episodesAdapter);
+        episodesView.setOnItemClickListener(episodeClickListener);
+    }
+
+    private void fetchNewEpisodes(int existingCount){
+        if(existingCount == 0)
+            networkHelper.initialFetchNewEpisodes(episodesAdapter);
+        else
+            networkHelper.fetchNewEpisodes(episodesAdapter);
+    }
+
+    private class LoadEpisodesFromDB extends AsyncTask<Void, Void, List<Episode>> {
+
+        protected List<Episode> doInBackground(Void... params){
+            return Episode.listAllInOrder();
+        }
+
+        protected void onPostExecute(List<Episode> episodes){
+            setupEpisodesAdapter(episodes);
+            fetchNewEpisodes(episodes.size());
+        }
+    }
+
     private class FetchVimeoUrlTask extends AsyncTask<Episode, Void, String[]> {
         private Context context;
         private boolean playWhenDone;
@@ -155,10 +169,6 @@ public class VideoListActivity extends AppCompatActivity {
                 Log.e("DDG IO Error", e.getMessage());
                 return null;
             }
-        }
-
-        protected void onProgressUpdate(){
-            //Do nothing
         }
 
         protected void onPostExecute(String[] vimeoUrls){

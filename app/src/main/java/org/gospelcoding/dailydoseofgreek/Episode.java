@@ -64,6 +64,10 @@ public class Episode extends SugarRecord<Episode> {
         return true;
     }
 
+    public boolean olderThan(Episode e){
+        return pubDate < e.pubDate;
+    }
+
     public static ArrayList<Episode> saveEpisodesFromRSS(ArrayList<Article> articles){
         ArrayList<Episode> newEpisodes = new ArrayList<Episode>();
         for (Article article: articles) {
