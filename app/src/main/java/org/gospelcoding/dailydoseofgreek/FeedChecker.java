@@ -10,7 +10,7 @@ public class FeedChecker extends IntentService {
 
     public FeedChecker() {
         super("FeedChecker");
-        networkHelper = new DDGNetworkHelper();
+        networkHelper = new DDGNetworkHelper(this);
     }
 
     @Override

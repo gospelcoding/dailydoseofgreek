@@ -40,7 +40,7 @@ public class VideoListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
 
-        networkHelper = new DDGNetworkHelper();
+        networkHelper = new DDGNetworkHelper(this);
 
         new LoadEpisodesFromDB().execute();
         setAlarmIfNecessary();
@@ -64,17 +64,14 @@ public class VideoListActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Episode clickedEpisode = episodesAdapter.getItem(position);
-            if(clickedEpisode.vimeoUrl != null)
-                launchPlayEpisodeActivity(clickedEpisode.vimeoUrl);
-            else
-                new FetchVimeoUrlTask(parent.getContext(), true).execute(clickedEpisode);
+            launchPlayEpisodeActivity(clickedEpisode);
         }
     };
 
 
-    private void launchPlayEpisodeActivity(String vimeoUrl){
+    private void launchPlayEpisodeActivity(Episode episode){
         Intent intent = new Intent(this, PlayEpisodeActivity.class);
-        intent.putExtra(VIMEO_URL_EXTRA, vimeoUrl);
+        intent.putExtra(PlayEpisodeActivity.EPISODE_EXTRA, episode);
         startActivity(intent);
     }
 
@@ -137,50 +134,5 @@ public class VideoListActivity extends AppCompatActivity {
             setupEpisodesAdapter(episodes);
             fetchNewEpisodes(episodes.size());
         }
-    }
-
-    private class FetchVimeoUrlTask extends AsyncTask<Episode, Void, String[]> {
-        private Context context;
-        private boolean playWhenDone;
-
-        public FetchVimeoUrlTask(Context context, boolean playWhenDone){
-            super();
-            this.context = context;
-            this.playWhenDone = playWhenDone;
-        }
-
-        protected String[] doInBackground(Episode... episodes){
-            String[] vimeoUrls = new String[episodes.length];
-            for (int i=0; i<episodes.length; i++) {
-                vimeoUrls[i] = fetchVimeoUrl(episodes[i]);
-            }
-            return vimeoUrls;
-        }
-
-        private String fetchVimeoUrl(Episode episode){
-            try {
-                Document doc = Jsoup.connect(episode.ddgUrl).get();
-                Element iframe = doc.select("iframe").first();
-                String vimeoUrl = iframe.attr("src");
-                episode.vimeoUrl = vimeoUrl;
-                episode.save();
-                return vimeoUrl;
-            } catch (IOException e) {
-                Log.e("DDG IO Error", e.getMessage());
-                return null;
-            }
-        }
-
-        protected void onPostExecute(String[] vimeoUrls){
-            //Just going to show the first
-            if(playWhenDone){
-                if(vimeoUrls[0] != null)
-                    launchPlayEpisodeActivity(vimeoUrls[0]);
-                else
-                    Toast.makeText(context, "Unable to retrieve video", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
     }
 }

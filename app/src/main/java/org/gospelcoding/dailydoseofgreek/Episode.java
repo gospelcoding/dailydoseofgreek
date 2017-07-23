@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
  * Created by rick on 6/11/17.
  */
 
-public class Episode extends SugarRecord<Episode> {
+public class Episode extends SugarRecord<Episode> implements Serializable {
     String title;
     String vimeoUrl;
     String ddgUrl;
