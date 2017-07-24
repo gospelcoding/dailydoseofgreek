@@ -94,7 +94,7 @@ public class DDGNetworkHelper {
         String title = "New Episode: " + episode.title;
         String text = "Published " + new Date(episode.pubDate).toString();
         Intent playEpisodeIntent = new Intent(context, PlayEpisodeActivity.class);
-        playEpisodeIntent.putExtra(PlayEpisodeActivity.EPISODE_EXTRA, episode);
+        playEpisodeIntent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         PendingIntent playEpisodePendingIntent = PendingIntent.getActivity(context, 0, playEpisodeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentTitle(title).setContentText(text).setContentIntent(playEpisodePendingIntent);
     }

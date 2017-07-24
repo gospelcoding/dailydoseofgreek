@@ -71,7 +71,7 @@ public class VideoListActivity extends AppCompatActivity {
 
     private void launchPlayEpisodeActivity(Episode episode){
         Intent intent = new Intent(this, PlayEpisodeActivity.class);
-        intent.putExtra(PlayEpisodeActivity.EPISODE_EXTRA, episode);
+        intent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         startActivity(intent);
     }
 

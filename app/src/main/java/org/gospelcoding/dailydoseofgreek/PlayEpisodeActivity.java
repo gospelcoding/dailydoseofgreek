@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class PlayEpisodeActivity extends AppCompatActivity {
 
-    public static final String EPISODE_EXTRA = "org.gospelcoding.dailydoseofgreek.episode_extra";
+    public static final String EPISODE_ID_EXTRA = "org.gospelcoding.dailydoseofgreek.episode_extra";
 
     HTML5WebView webView;
     Episode episode;
@@ -32,7 +32,8 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        episode = (Episode) getIntent().getSerializableExtra(EPISODE_EXTRA);
+        long episodeId = getIntent().getLongExtra(EPISODE_ID_EXTRA, -1);
+        episode = Episode.findById(Episode.class, episodeId);
         if(episode.vimeoUrl == null)
             new FetchVimeoUrlTask().execute();
         else
