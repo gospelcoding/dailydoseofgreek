@@ -97,6 +97,7 @@ public class VideoListActivity extends AppCompatActivity {
                                          nextCalendarAtTime(10, 15).getTimeInMillis(),
                                          AlarmManager.INTERVAL_DAY,
                                          alarmIntent);
+        //Log.d("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
     }
 
     private Calendar nextCalendarAtTime(int hour, int minute){

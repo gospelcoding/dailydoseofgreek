@@ -39,9 +39,13 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <service
+        <receiver
             android:name=".FeedChecker"
-            android:exported="false"></service>
+            android:exported="false">
+            <intent-filter>
+                <action android:name="org.gospelcoding.dailydose.CHECK_FOR_EPISODES" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
