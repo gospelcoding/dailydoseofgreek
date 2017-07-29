@@ -36,8 +36,10 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         episode = Episode.findById(Episode.class, episodeId);
         if(episode.vimeoUrl == null)
             new FetchVimeoUrlTask().execute();
-        else
+        else {
             loadVideo();
+            updateVideo();
+        }
     }
 
     @Override
@@ -57,6 +59,11 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         webView.loadData(html1 + episode.vimeoUrl + html2, "text/html", null);
 
         setContentView(webView.getLayout());
+    }
+
+    private void updateVideo(){
+        episode.lastWatched = System.currentTimeMillis();
+        episode.save();
     }
 
     private void failureToast(){
@@ -84,7 +91,7 @@ public class PlayEpisodeActivity extends AppCompatActivity {
             }
             episode.vimeoUrl = vimeoUrl;
             loadVideo();
-            episode.save();
+            updateVideo();
         }
     }
 }

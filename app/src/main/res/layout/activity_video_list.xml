@@ -6,29 +6,6 @@
     android:layout_height="match_parent"
     tools:context="org.gospelcoding.dailydoseofgreek.VideoListActivity">
 
-
-    <Button
-        android:id="@+id/fetch_more"
-        android:layout_width="138dp"
-        android:layout_height="44dp"
-        android:text="@string/fetch_more"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="451dp" />
-
-    <Button
-        android:id="@+id/fetch_all"
-        android:layout_width="138dp"
-        android:layout_height="44dp"
-        android:text="@string/fetch_all"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:onClick="fetchAllEpisodes"/>
-
     <ListView
         android:id="@+id/episodes_listview"
         android:layout_width="377dp"
@@ -37,7 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fetch_more"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintVertical_bias="0.0" />
 

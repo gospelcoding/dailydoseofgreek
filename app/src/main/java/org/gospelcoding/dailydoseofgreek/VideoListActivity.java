@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class VideoListActivity extends AppCompatActivity {
 
     public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydoseofgreek.vimeo_url";
-    ArrayAdapter<Episode> episodesAdapter;
+    DDGArrayAdapter episodesAdapter;
     DDGNetworkHelper networkHelper;
 
     @Override
@@ -44,20 +44,6 @@ public class VideoListActivity extends AppCompatActivity {
 
         new LoadEpisodesFromDB().execute();
         setAlarmIfNecessary();
-    }
-
-    public void fetchAllEpisodes(View v){
-        networkHelper.fetchAllEpisodes(episodesAdapter);
-    }
-
-    private boolean episodesNotFound(ArrayList<Article> list){
-        if(list.size() == 0)
-            return true;
-        Pattern failPattern = Pattern.compile("404 Not Found");
-        Matcher m = failPattern.matcher(list.get(0).getTitle());
-        if(m.find())
-            return true;
-        return false;
     }
 
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
@@ -73,20 +59,6 @@ public class VideoListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayEpisodeActivity.class);
         intent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         startActivity(intent);
-    }
-
-    private void printAllTitles(){
-        List<Episode> episodes = Episode.listAll(Episode.class);
-        String display = "";
-        for(Episode episode : episodes){
-            display += String.valueOf(episode.getId()) + " " + episode.getTitle() + ". Cat: ";
-            if(episode.bibleBook == null)
-                display += "Other\n";
-            else
-                display += episode.bibleBook + "\n";
-        }
-        //TextView tv = (TextView) findViewById(R.id.rssInfo);
-        //tv.setText(display);
     }
 
     private void setAlarmIfNecessary(){
@@ -111,8 +83,7 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private void setupEpisodesAdapter(List<Episode> episodes){
-        episodesAdapter = new ArrayAdapter<Episode>(this,
-                android.R.layout.simple_list_item_1, episodes);
+        episodesAdapter = new DDGArrayAdapter(this, episodes);
         ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
         episodesView.setAdapter(episodesAdapter);
         episodesView.setOnItemClickListener(episodeClickListener);
@@ -120,7 +91,7 @@ public class VideoListActivity extends AppCompatActivity {
 
     private void fetchNewEpisodes(int existingCount){
         if(existingCount == 0)
-            networkHelper.initialFetchNewEpisodes(episodesAdapter);
+            networkHelper.fetchAllEpisodes(episodesAdapter);
         else
             networkHelper.fetchNewEpisodes(episodesAdapter);
     }
