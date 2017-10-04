@@ -3,6 +3,7 @@ package org.gospelcoding.dailydoseofgreek;
 import android.util.Log;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.prof.rssparser.Article;
 
 import org.jsoup.Jsoup;
@@ -29,6 +30,9 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     long lastWatched;
     String bibleBook;
     int bibleChapter;
+
+    @Ignore
+    boolean featured = false;
 
     public Episode(){
     }
@@ -82,7 +86,13 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     }
 
     public static List<Episode> listAllInOrder(){
-        return find(Episode.class, null, null, null, "pub_date DESC", null);
+        List<Episode> episodes = find(Episode.class, null, null, null, "pub_date DESC", null);
+        if(episodes.size() == 0)
+            return episodes;
+        Episode featured = findFeaturedEpisode();
+        if(featured != null && featured.id != episodes.get(0).id)
+            episodes.add(0, featured);
+        return episodes;
     }
 
     public String toString(){
@@ -93,6 +103,24 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         return title;
     }
 
+    private static Episode findFeaturedEpisode(){
+        List<Episode> watchedEpisodes = find(Episode.class, "last_watched NOT NULL", null, null, "last_watched DESC", null);
+        int i = 0;
+        while(watchedEpisodes.get(i).bibleBook == null) {
+            ++i;
+            if (i == watchedEpisodes.size())
+                return null;
+        }
+        Episode lastEpisode = watchedEpisodes.get(i);
+        String[] whereArgs = {lastEpisode.bibleBook, String.valueOf(lastEpisode.pubDate)};
+        List<Episode> nextEpisode = find(Episode.class, "bible_book = ? and pub_date > ?", whereArgs, null, "pub_date ASC", "1");
+        if(nextEpisode.size() > 0) {
+            Episode featured = nextEpisode.get(0);
+            featured.featured = true;
+            return featured;
+        }
+        return null;
+    }
 //    public static void debugDeleteMostReccentEpisode(){
 //       List<Episode> episodes = find(Episode.class, null, null, null, "pub_date DESC", null);
 //        Episode e = episodes.get(0);

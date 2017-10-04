@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -39,12 +40,18 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> {
         View episodeView = inflater.inflate(R.layout.episode_list_view, parent, false);
         TextView titleView = (TextView) episodeView.findViewById(R.id.title_view);
         TextView pubDateView = (TextView) episodeView.findViewById(R.id.pub_date_view);
-        CheckBox watchedCheckBox = (CheckBox) episodeView.findViewById(R.id.watched_checkbox);
         Episode episode = episodes.get(position);
         titleView.setText(episode.getTitle());
         Date pubDate = new Date(episode.pubDate);
-        if(episode.lastWatched != 0)
+        if(episode.lastWatched != 0) {
+            CheckBox watchedCheckBox = (CheckBox) episodeView.findViewById(R.id.watched_checkbox);
             watchedCheckBox.setChecked(true);
+        }
+        if(episode.featured){
+            TextView continueWatching = (TextView) episodeView.findViewById(R.id.continue_watching);
+            continueWatching.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            continueWatching.setText(context.getString(R.string.continue_watching) + " " + episode.bibleBook);
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy");
         String dateString = dateFormat.format(pubDate);
         pubDateView.setText(dateString);

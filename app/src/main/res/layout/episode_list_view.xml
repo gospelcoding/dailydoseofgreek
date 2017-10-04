@@ -6,11 +6,20 @@
     android:paddingRight="16dp"
     android:descendantFocusability="beforeDescendants">
 
+    <TextView
+        android:id="@+id/continue_watching"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        android:text="@string/continue_watching"
+        android:textStyle="italic"/>
+
     <CheckBox
         android:id="@+id/watched_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_below="@id/continue_watching"
         android:focusable="false"
         android:clickable="false"/>
 
@@ -18,7 +27,7 @@
         android:id="@+id/title_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/continue_watching"
         android:layout_toRightOf="@id/watched_checkbox"
         android:textSize="22dp"
         android:textStyle="bold"

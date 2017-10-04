@@ -46,6 +46,12 @@ public class VideoListActivity extends AppCompatActivity {
         setAlarmIfNecessary();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        new LoadEpisodesFromDB().execute();
+    }
+
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
