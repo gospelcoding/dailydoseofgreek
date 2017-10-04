@@ -93,4 +93,10 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         return title;
     }
 
+//    public static void debugDeleteMostReccentEpisode(){
+//       List<Episode> episodes = find(Episode.class, null, null, null, "pub_date DESC", null);
+//        Episode e = episodes.get(0);
+//        Log.e("DDG Alarm", "Deleting episode: " + e.title);
+//        e.delete();
+//    }
 }

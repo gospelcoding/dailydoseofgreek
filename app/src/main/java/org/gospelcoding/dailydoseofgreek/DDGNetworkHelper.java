@@ -39,7 +39,7 @@ public class DDGNetworkHelper {
     }
 
     public void fetchNewEpisodesAndNotify(){
-        fetchEpisodes(null, 1, FETCH_NEW);
+        fetchEpisodes(null, 1, FETCH_NEW_AND_NOTIFY);
     }
 
     public void fetchNewEpisodes(ArrayAdapter<Episode> episodesAdapter){
@@ -78,7 +78,8 @@ public class DDGNetworkHelper {
 
     private void notifyNewEpisodes(ArrayList<Episode> newEpisodes){
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.logo);
+                .setSmallIcon(R.drawable.logo)
+                .setAutoCancel(true);
         if(newEpisodes.size() == 0)
             return;
         else if(newEpisodes.size() == 1)

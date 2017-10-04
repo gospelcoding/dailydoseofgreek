@@ -19,7 +19,7 @@ public class FeedChecker extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         //TODO Does this need a wake lock to be correct?
 
-        Log.d("DDG Alarm", "Alarm went off now!");
+//        Log.e("DDG Alarm", "Alarm went off now!");
         networkHelper = new DDGNetworkHelper(context);
         networkHelper.fetchNewEpisodesAndNotify();
     }

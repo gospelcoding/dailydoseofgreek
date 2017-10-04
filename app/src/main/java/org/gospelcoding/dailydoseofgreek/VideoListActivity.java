@@ -65,11 +65,12 @@ public class VideoListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FeedChecker.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+//        Calendar debugCal = nextCalendarAtTime(21, 37);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                                          nextCalendarAtTime(10, 15).getTimeInMillis(),
                                          AlarmManager.INTERVAL_DAY,
                                          alarmIntent);
-        //Log.d("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
+//        Log.e("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
     }
 
     private Calendar nextCalendarAtTime(int hour, int minute){
