@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -49,6 +49,8 @@ public class VideoListActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            CheckBox watched = (CheckBox) view.findViewById(R.id.watched_checkbox);
+            watched.setChecked(true);
             Episode clickedEpisode = episodesAdapter.getItem(position);
             launchPlayEpisodeActivity(clickedEpisode);
         }

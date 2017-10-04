@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.gospelcoding.dailydoseofgreek.Episode;
@@ -38,9 +39,12 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> {
         View episodeView = inflater.inflate(R.layout.episode_list_view, parent, false);
         TextView titleView = (TextView) episodeView.findViewById(R.id.title_view);
         TextView pubDateView = (TextView) episodeView.findViewById(R.id.pub_date_view);
+        CheckBox watchedCheckBox = (CheckBox) episodeView.findViewById(R.id.watched_checkbox);
         Episode episode = episodes.get(position);
         titleView.setText(episode.getTitle());
         Date pubDate = new Date(episode.pubDate);
+        if(episode.lastWatched != 0)
+            watchedCheckBox.setChecked(true);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy");
         String dateString = dateFormat.format(pubDate);
         pubDateView.setText(dateString);
