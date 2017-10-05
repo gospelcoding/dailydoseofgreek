@@ -71,7 +71,7 @@ public class DDGNetworkHelper {
 
             @Override
             public void onError() {
-                Log.e("DDG RSS Error", "Some error - Do we get here when we run out of episodes?");
+                //Log.e("DDG RSS Error", "Some error - Do we get here when we run out of episodes?");
             }
         });
     }
@@ -112,7 +112,7 @@ public class DDGNetworkHelper {
     }
 
     private boolean wantMoreEpisodes(int fetchType, int rssListSize, int savedEpisodeCount){
-        Log.d("D/RSS", "rssListSize: " + String.valueOf(rssListSize));
+        //Log.d("D/RSS", "rssListSize: " + String.valueOf(rssListSize));
         switch(fetchType){
             case INITIAL_FETCH:
                 return false;
@@ -122,7 +122,7 @@ public class DDGNetworkHelper {
             case FETCH_ALL:
                 return rssListSize > 0;
         }
-        Log.e("DDG Episde Fetch", "DDGNetworkHelper.wantMoreEpisodes called with invalid fetchType");
+        //Log.e("DDG Episde Fetch", "DDGNetworkHelper.wantMoreEpisodes called with invalid fetchType");
         return false;
     }
 
