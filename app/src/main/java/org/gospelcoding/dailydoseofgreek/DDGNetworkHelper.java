@@ -42,19 +42,19 @@ public class DDGNetworkHelper {
         fetchEpisodes(null, 1, FETCH_NEW_AND_NOTIFY);
     }
 
-    public void fetchNewEpisodes(ArrayAdapter<Episode> episodesAdapter){
+    public void fetchNewEpisodes(DDGArrayAdapter episodesAdapter){
         fetchEpisodes(episodesAdapter, 1, FETCH_NEW);
     }
 
-    public void initialFetchNewEpisodes(ArrayAdapter<Episode> episodesAdapter){
+    public void initialFetchNewEpisodes(DDGArrayAdapter episodesAdapter){
         fetchEpisodes(episodesAdapter, 1, INITIAL_FETCH);
     }
 
-    public void fetchAllEpisodes(final ArrayAdapter<Episode> episodesAdapter){
+    public void fetchAllEpisodes(final DDGArrayAdapter episodesAdapter){
         fetchEpisodes(episodesAdapter, 1, FETCH_ALL);
     }
 
-    private void fetchEpisodes(final ArrayAdapter<Episode> episodesAdapter, final int page, final int fetchType){
+    private void fetchEpisodes(final DDGArrayAdapter episodesAdapter, final int page, final int fetchType){
         Parser parser = new Parser();
         parser.execute(urlForPage(page));
         parser.onFinish(new Parser.OnTaskCompleted() {
@@ -133,7 +133,7 @@ public class DDGNetworkHelper {
         return urlString;
     }
 
-    private void addEpisodesToAdapter(ArrayAdapter<Episode> episodesAdapter, ArrayList<Episode> newEpisodes){
+    private void addEpisodesToAdapter(DDGArrayAdapter episodesAdapter, ArrayList<Episode> newEpisodes){
         for (Episode episode : newEpisodes){
             int i = 0;
             while(i < episodesAdapter.getCount() && episode.olderThan(episodesAdapter.getItem(i)))

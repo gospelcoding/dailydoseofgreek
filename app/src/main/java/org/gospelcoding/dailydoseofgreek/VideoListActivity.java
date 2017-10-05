@@ -42,7 +42,6 @@ public class VideoListActivity extends AppCompatActivity {
 
         networkHelper = new DDGNetworkHelper(this);
 
-        new LoadEpisodesFromDB().execute();
         setAlarmIfNecessary();
     }
 
