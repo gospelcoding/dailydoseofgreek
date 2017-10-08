@@ -11,6 +11,16 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    productFlavors {
+        dailydoseoffrank {
+            applicationIdSuffix ".greek"
+            versionNameSuffix "-greek"
+        }
+        dailydoseofhebrew {
+            applicationIdSuffix ".hebrew"
+            versionNameSuffix "-hebrew"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
