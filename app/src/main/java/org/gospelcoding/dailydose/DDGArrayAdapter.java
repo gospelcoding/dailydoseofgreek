@@ -1,4 +1,4 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,12 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.gospelcoding.dailydoseofgreek.Episode;
-import org.gospelcoding.dailydoseofgreek.R;
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

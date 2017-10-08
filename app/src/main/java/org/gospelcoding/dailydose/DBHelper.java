@@ -1,4 +1,4 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

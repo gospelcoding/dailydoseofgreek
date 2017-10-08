@@ -1,24 +1,15 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -127,7 +118,9 @@ public class DDGNetworkHelper {
     }
 
     private String urlForPage(int page){
-        String urlString = "http://dailydoseofgreek.com/feed";
+        String packageName = context.getPackageName();
+        String language = packageName.substring(packageName.lastIndexOf('.') + 1);
+        String urlString = "http://dailydoseof" + language + ".com/feed";
         if(page > 1)
             urlString += "/?paged=" + String.valueOf(page);
         return urlString;

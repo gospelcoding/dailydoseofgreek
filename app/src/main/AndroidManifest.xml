@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.gospelcoding.dailydoseofgreek">
+    package="org.gospelcoding.dailydose">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -27,7 +27,7 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="org.gospelcoding" />
 
-        <activity android:name=".VideoListActivity">
+        <activity android:name="org.gospelcoding.dailydose.VideoListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,12 +35,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlayEpisodeActivity"
+            android:name="org.gospelcoding.dailydose.PlayEpisodeActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <receiver
-            android:name=".FeedChecker"
+            android:name="org.gospelcoding.dailydose.FeedChecker"
             android:exported="false">
             <intent-filter>
                 <action android:name="org.gospelcoding.dailydose.CHECK_FOR_EPISODES" />

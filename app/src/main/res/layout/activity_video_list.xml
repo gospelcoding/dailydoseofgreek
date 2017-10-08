@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.gospelcoding.dailydoseofgreek.VideoListActivity">
+    tools:context="org.gospelcoding.dailydose.VideoListActivity">
 
     <ListView
         android:id="@+id/episodes_listview"

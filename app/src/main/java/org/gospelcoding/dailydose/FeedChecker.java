@@ -1,10 +1,8 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
-import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
-import android.util.Log;
 
 public class FeedChecker extends BroadcastReceiver {
 

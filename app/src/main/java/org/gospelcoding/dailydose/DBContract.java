@@ -1,4 +1,4 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
 import android.provider.BaseColumns;
 

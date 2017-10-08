@@ -1,16 +1,9 @@
-package org.gospelcoding.dailydoseofgreek;
-
-import android.util.Log;
+package org.gospelcoding.dailydose;
 
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.prof.rssparser.Article;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;

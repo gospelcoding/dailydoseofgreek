@@ -1,7 +1,4 @@
-package org.gospelcoding.dailydoseofgreek;
-
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+package org.gospelcoding.dailydose;
 
 import com.orm.SugarRecord;
 

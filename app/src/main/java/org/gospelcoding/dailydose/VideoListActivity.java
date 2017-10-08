@@ -1,4 +1,4 @@
-package org.gospelcoding.dailydoseofgreek;
+package org.gospelcoding.dailydose;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,31 +7,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.prof.rssparser.Article;
-import com.prof.rssparser.Parser;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VideoListActivity extends AppCompatActivity {
 
-    public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydoseofgreek.vimeo_url";
+    public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydose.vimeo_url";
     DDGArrayAdapter episodesAdapter;
     DDGNetworkHelper networkHelper;
 

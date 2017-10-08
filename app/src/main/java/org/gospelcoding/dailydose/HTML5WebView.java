@@ -1,15 +1,9 @@
-package org.gospelcoding.dailydoseofgreek;
-
-        import java.lang.reflect.Field;
-        import java.lang.reflect.Method;
-        import java.util.Timer;
-        import java.util.TimerTask;
+package org.gospelcoding.dailydose;
 
         import android.app.Activity;
         import android.content.Context;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
-        import android.os.Message;
         import android.util.AttributeSet;
         import android.util.Log;
         import android.view.KeyEvent;
