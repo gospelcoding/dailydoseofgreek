@@ -22,7 +22,9 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     Episode episode;
 
     String html1 = "<!DOCTYPE html><html><style>html, body{height: 100%;} iframe{height: 100%; width: 100%}</style><body><iframe src='";
-    String html2 = "?autoplay=1' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></body></html>";
+    String html2vimeo = "?autoplay=1' ";
+    String html2youtube = "' ";
+    String html3 = " frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></body></html>";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,12 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         webView.getSettings().setPluginState(WebSettings.PluginState.OFF);
         webView.getSettings().setAllowFileAccess(true);
 
-        webView.loadData(html1 + episode.vimeoUrl + html2, "text/html", null);
+        String html;
+        if(episode.vimeoUrl.contains("?"))  //The youtube video src urls have a ? already. For vimeo we add it.
+            html = html1 + episode.vimeoUrl + html2youtube + html3;
+        else
+            html = html1 + episode.vimeoUrl + html2vimeo + html3;
+        webView.loadData(html, "text/html", null);
 
         setContentView(webView.getLayout());
     }
