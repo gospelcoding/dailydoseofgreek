@@ -88,7 +88,7 @@ public class DDGNetworkHelper {
         Intent playEpisodeIntent = new Intent(context, PlayEpisodeActivity.class);
         playEpisodeIntent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         PendingIntent playEpisodePendingIntent = PendingIntent.getActivity(context, 0, playEpisodeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(playEpisodePendingIntent);
+        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(playEpisodePendingIntent).setSmallIcon(R.drawable.logo);
     }
 
     private void buildNotificationForMultipleEpisodes(NotificationCompat.Builder mBuilder, ArrayList<Episode> newEpisodes){
@@ -99,7 +99,7 @@ public class DDGNetworkHelper {
         }
         Intent episodeListIntent = new Intent(context, VideoListActivity.class);
         PendingIntent episodeListPendingIntent = PendingIntent.getActivity(context, 0, episodeListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(episodeListPendingIntent);
+        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(episodeListPendingIntent).setSmallIcon(R.drawable.logo);
     }
 
     private boolean wantMoreEpisodes(int fetchType, int rssListSize, int savedEpisodeCount){
