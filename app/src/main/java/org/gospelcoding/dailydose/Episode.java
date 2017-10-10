@@ -47,11 +47,6 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         bibleChapter = Integer.parseInt(m.group(2));
     }
 
-    public void addCategory(Category c){
-        CategoryEpisode catEp = new CategoryEpisode(c, this);
-        catEp.save();
-    }
-
     public boolean saveIfNew(){
         if(ddgUrl == null)
             return false;
