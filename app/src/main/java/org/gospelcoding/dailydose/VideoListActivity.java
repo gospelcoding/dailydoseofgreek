@@ -60,7 +60,7 @@ public class VideoListActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 //        Calendar debugCal = nextCalendarAtTime(21, 37);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                         nextCalendarAtTime(10, 15).getTimeInMillis(),
+                                         nextCalendarAtTime(9, 0).getTimeInMillis(),
                                          AlarmManager.INTERVAL_DAY,
                                          alarmIntent);
 //        Log.e("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
@@ -71,6 +71,8 @@ public class VideoListActivity extends AppCompatActivity {
         Calendar rVal = Calendar.getInstance();
         rVal.set(Calendar.HOUR_OF_DAY, hour);
         rVal.set(Calendar.MINUTE, minute);
+        int offset = rVal.getTimeZone().getRawOffset() * -1;
+        rVal.add(Calendar.MILLISECOND, offset);
         if(now.getTimeInMillis() > rVal.getTimeInMillis())
             rVal.add(Calendar.DAY_OF_MONTH, 1);
         return rVal;
