@@ -56,7 +56,7 @@ public class DDGNetworkHelper {
                     addEpisodesToAdapter(episodesAdapter, newEpisodes);
                 if(wantMoreEpisodes(fetchType, articleList.size(), newEpisodes.size()))
                     fetchEpisodes(episodesAdapter, page + 1, fetchType);
-                if(fetchType == FETCH_NEW_AND_NOTIFY)
+                if(true || fetchType == FETCH_NEW_AND_NOTIFY)
                     notifyNewEpisodes(newEpisodes);
             }
 
@@ -69,7 +69,7 @@ public class DDGNetworkHelper {
 
     private void notifyNewEpisodes(ArrayList<Episode> newEpisodes){
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.logo_notification)
                 .setAutoCancel(true);
         if(newEpisodes.size() == 0)
             return;
@@ -88,7 +88,7 @@ public class DDGNetworkHelper {
         Intent playEpisodeIntent = new Intent(context, PlayEpisodeActivity.class);
         playEpisodeIntent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         PendingIntent playEpisodePendingIntent = PendingIntent.getActivity(context, 0, playEpisodeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(playEpisodePendingIntent).setSmallIcon(R.drawable.logo);
+        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(playEpisodePendingIntent);
     }
 
     private void buildNotificationForMultipleEpisodes(NotificationCompat.Builder mBuilder, ArrayList<Episode> newEpisodes){
@@ -99,7 +99,7 @@ public class DDGNetworkHelper {
         }
         Intent episodeListIntent = new Intent(context, VideoListActivity.class);
         PendingIntent episodeListPendingIntent = PendingIntent.getActivity(context, 0, episodeListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(episodeListPendingIntent).setSmallIcon(R.drawable.logo);
+        mBuilder.setContentTitle(title).setContentText(text).setContentIntent(episodeListPendingIntent);
     }
 
     private boolean wantMoreEpisodes(int fetchType, int rssListSize, int savedEpisodeCount){
