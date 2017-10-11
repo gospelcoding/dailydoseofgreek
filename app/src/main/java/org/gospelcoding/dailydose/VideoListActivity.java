@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class VideoListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_list);
+        setContentView(R.layout.loading_episodes);
 
         networkHelper = new DDGNetworkHelper(this);
 
@@ -35,6 +36,11 @@ public class VideoListActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         new LoadEpisodesFromDB().execute();
+    }
+
+    public void setListView(ArrayList<Episode> episodes){
+        setupEpisodesAdapter(episodes);
+        networkHelper.fetchAllEpisodes(episodesAdapter);
     }
 
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
@@ -79,15 +85,18 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private void setupEpisodesAdapter(List<Episode> episodes){
-        episodesAdapter = new DDGArrayAdapter(this, episodes);
-        ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
-        episodesView.setAdapter(episodesAdapter);
-        episodesView.setOnItemClickListener(episodeClickListener);
+        if(episodes.size() > 0) {
+            setContentView(R.layout.activity_video_list);
+            episodesAdapter = new DDGArrayAdapter(this, episodes);
+            ListView episodesView = (ListView) findViewById(R.id.episodes_listview);
+            episodesView.setAdapter(episodesAdapter);
+            episodesView.setOnItemClickListener(episodeClickListener);
+        }
     }
 
     private void fetchNewEpisodes(int existingCount){
         if(existingCount == 0)
-            networkHelper.fetchAllEpisodes(episodesAdapter);
+            networkHelper.initialFetchNewEpisodes(this);
         else
             networkHelper.fetchNewEpisodes(episodesAdapter);
     }

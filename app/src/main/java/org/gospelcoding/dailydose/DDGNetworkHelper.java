@@ -23,6 +23,8 @@ public class DDGNetworkHelper {
 
     //Parser parser;
     Context context;
+    VideoListActivity videoListActivity;
+    DDGArrayAdapter episodesAdapter;
 
     public DDGNetworkHelper(Context context){
         //parser = new Parser();
@@ -30,32 +32,37 @@ public class DDGNetworkHelper {
     }
 
     public void fetchNewEpisodesAndNotify(){
-        fetchEpisodes(null, 1, FETCH_NEW_AND_NOTIFY);
+        fetchEpisodes(1, FETCH_NEW_AND_NOTIFY);
     }
 
     public void fetchNewEpisodes(DDGArrayAdapter episodesAdapter){
-        fetchEpisodes(episodesAdapter, 1, FETCH_NEW);
+        this.episodesAdapter = episodesAdapter;
+        fetchEpisodes(1, FETCH_NEW);
     }
 
-    public void initialFetchNewEpisodes(DDGArrayAdapter episodesAdapter){
-        fetchEpisodes(episodesAdapter, 1, INITIAL_FETCH);
+    public void initialFetchNewEpisodes(VideoListActivity listActivity){
+        this.videoListActivity = listActivity;
+        fetchEpisodes(1, INITIAL_FETCH);
     }
 
-    public void fetchAllEpisodes(final DDGArrayAdapter episodesAdapter){
-        fetchEpisodes(episodesAdapter, 1, FETCH_ALL);
+    public void fetchAllEpisodes(DDGArrayAdapter episodesAdapter){
+        this.episodesAdapter = episodesAdapter;
+        fetchEpisodes(1, FETCH_ALL);
     }
 
-    private void fetchEpisodes(final DDGArrayAdapter episodesAdapter, final int page, final int fetchType){
+    private void fetchEpisodes(final int page, final int fetchType){
         Parser parser = new Parser();
         parser.execute(urlForPage(page));
         parser.onFinish(new Parser.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(ArrayList<Article> articleList) {
                 ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(articleList);
+                if(fetchType == INITIAL_FETCH)
+                    newEpisodesList(newEpisodes);
                 if(episodesAdapter != null)
-                    addEpisodesToAdapter(episodesAdapter, newEpisodes);
+                    addEpisodesToAdapter(newEpisodes);
                 if(wantMoreEpisodes(fetchType, articleList.size(), newEpisodes.size()))
-                    fetchEpisodes(episodesAdapter, page + 1, fetchType);
+                    fetchEpisodes(page + 1, fetchType);
                 if(fetchType == FETCH_NEW_AND_NOTIFY)
                     notifyNewEpisodes(newEpisodes);
             }
@@ -126,7 +133,12 @@ public class DDGNetworkHelper {
         return urlString;
     }
 
-    private void addEpisodesToAdapter(DDGArrayAdapter episodesAdapter, ArrayList<Episode> newEpisodes){
+    private void newEpisodesList(ArrayList<Episode> newEpisodes){
+        videoListActivity.setListView(newEpisodes);
+
+    }
+
+    private void addEpisodesToAdapter(ArrayList<Episode> newEpisodes){
         for (Episode episode : newEpisodes){
             int i = 0;
             while(i < episodesAdapter.getCount() && (episodesAdapter.getItem(i).featured || episode.olderThan(episodesAdapter.getItem(i))))
