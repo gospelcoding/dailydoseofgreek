@@ -56,7 +56,7 @@ public class DDGNetworkHelper {
                     addEpisodesToAdapter(episodesAdapter, newEpisodes);
                 if(wantMoreEpisodes(fetchType, articleList.size(), newEpisodes.size()))
                     fetchEpisodes(episodesAdapter, page + 1, fetchType);
-                if(true || fetchType == FETCH_NEW_AND_NOTIFY)
+                if(fetchType == FETCH_NEW_AND_NOTIFY)
                     notifyNewEpisodes(newEpisodes);
             }
 
