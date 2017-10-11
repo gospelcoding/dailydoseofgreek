@@ -78,8 +78,13 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         if(episodes.size() == 0)
             return episodes;
         Episode featured = findFeaturedEpisode();
-        if(featured != null && featured.id != episodes.get(0).id)
-            episodes.add(0, featured);
+        if(featured != null){
+            if(featured.id.equals(episodes.get(0).id))
+                episodes.set(0, featured);
+            else
+                episodes.add(0, featured);
+
+        }
         return episodes;
     }
 
@@ -92,13 +97,12 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     }
 
     private static Episode findFeaturedEpisode(){
-        List<Episode> watchedEpisodes = find(Episode.class, "last_watched NOT NULL", null, null, "last_watched DESC", null);
+        List<Episode> watchedEpisodes = find(Episode.class, "last_watched != 0", null, null, "last_watched DESC", null);
         int i = 0;
-        while(watchedEpisodes.get(i).bibleBook == null) {
+        while(i < watchedEpisodes.size() && watchedEpisodes.get(i).bibleBook == null)
             ++i;
-            if (i == watchedEpisodes.size())
-                return null;
-        }
+        if (i >= watchedEpisodes.size())
+            return null;
         Episode lastEpisode = watchedEpisodes.get(i);
         String[] whereArgs = {lastEpisode.bibleBook, String.valueOf(lastEpisode.pubDate)};
         List<Episode> nextEpisode = find(Episode.class, "bible_book = ? and pub_date > ?", whereArgs, null, "pub_date ASC", "1");
