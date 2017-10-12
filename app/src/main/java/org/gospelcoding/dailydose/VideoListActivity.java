@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,6 +46,12 @@ public class VideoListActivity extends AppCompatActivity {
     public void setListView(ArrayList<Episode> episodes){
         setupEpisodesAdapter(episodes);
         networkHelper.fetchAllEpisodes(episodesAdapter);
+    }
+
+    public void alertNoInternet(){
+        TextView noInternetTextView = (TextView) findViewById(R.id.no_internet_text);
+        if(noInternetTextView != null)
+            noInternetTextView.setVisibility(View.VISIBLE);
     }
 
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {

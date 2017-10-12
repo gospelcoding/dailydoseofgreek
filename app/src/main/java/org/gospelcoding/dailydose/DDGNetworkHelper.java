@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -52,6 +54,10 @@ public class DDGNetworkHelper {
     }
 
     private void fetchEpisodes(final int page, final int fetchType){
+        if(!internetAvailable()){
+            handleNoInternet(fetchType);
+            return;
+        }
         Parser parser = new Parser();
         parser.execute(urlForPage(page));
         parser.onFinish(new Parser.OnTaskCompleted() {
@@ -155,5 +161,16 @@ public class DDGNetworkHelper {
                 ++i;
             episodesAdapter.insert(episode, i);
         }
+    }
+
+    private boolean internetAvailable(){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    private void handleNoInternet(int fetchType){
+        if(fetchType == INITIAL_FETCH && videoListActivity != null)
+            videoListActivity.alertNoInternet();
     }
 }

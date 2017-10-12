@@ -9,4 +9,12 @@
         android:layout_margin="40dp"
         android:text="@string/loading_episodes" />
 
+    <TextView
+        android:id="@+id/no_internet_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:text="@string/no_internet"
+        android:visibility="invisible"/>
+
 </LinearLayout>
