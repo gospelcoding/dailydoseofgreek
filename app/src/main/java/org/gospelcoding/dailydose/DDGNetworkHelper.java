@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -65,10 +66,13 @@ public class DDGNetworkHelper {
                     fetchEpisodes(page + 1, fetchType);
                 if(fetchType == FETCH_NEW_AND_NOTIFY)
                     notifyNewEpisodes(newEpisodes);
+                if(fetchType == FETCH_ALL && articleList.size() == 0)
+                    setDownloadedAll();
             }
 
             @Override
             public void onError() {
+
                 Log.e("DDG RSS Error", "Some error - Do we get here when we run out of episodes?");
             }
         });
@@ -122,6 +126,12 @@ public class DDGNetworkHelper {
         }
         Log.e("DDG Episde Fetch", "DDGNetworkHelper.wantMoreEpisodes called with invalid fetchType");
         return false;
+    }
+
+    private void setDownloadedAll(){
+        SharedPreferences.Editor valuesEditor = context.getSharedPreferences(VideoListActivity.SHARED_PREFERENCES_TAG, 0).edit();
+        valuesEditor.putBoolean(VideoListActivity.DOWNLOADED_ALL, true);
+        valuesEditor.commit();
     }
 
     private String urlForPage(int page){

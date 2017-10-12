@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import java.util.List;
 public class VideoListActivity extends AppCompatActivity {
 
     public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydose.vimeo_url";
+    public static final String SHARED_PREFERENCES_TAG = "org.gospelcoding.dailydose.Shared_Prefs";
+    public static final String DOWNLOADED_ALL = "downloadedAll";
+
     DDGArrayAdapter episodesAdapter;
     DDGNetworkHelper networkHelper;
 
@@ -77,7 +81,7 @@ public class VideoListActivity extends AppCompatActivity {
         Calendar rVal = Calendar.getInstance();
         rVal.set(Calendar.HOUR_OF_DAY, hour);
         rVal.set(Calendar.MINUTE, minute);
-        int offset = rVal.getTimeZone().getRawOffset() * -1;
+        int offset = rVal.getTimeZone().getRawOffset();
         rVal.add(Calendar.MILLISECOND, offset);
         if(now.getTimeInMillis() > rVal.getTimeInMillis())
             rVal.add(Calendar.DAY_OF_MONTH, 1);
@@ -95,8 +99,12 @@ public class VideoListActivity extends AppCompatActivity {
     }
 
     private void fetchNewEpisodes(int existingCount){
+        SharedPreferences values = getSharedPreferences(SHARED_PREFERENCES_TAG, 0);
+        boolean downloadedAll = values.getBoolean(DOWNLOADED_ALL, false);
         if(existingCount == 0)
             networkHelper.initialFetchNewEpisodes(this);
+        else if(!downloadedAll)
+            networkHelper.fetchAllEpisodes(episodesAdapter);
         else
             networkHelper.fetchNewEpisodes(episodesAdapter);
     }
