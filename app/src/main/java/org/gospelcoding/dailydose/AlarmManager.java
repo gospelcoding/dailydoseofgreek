@@ -3,6 +3,7 @@ package org.gospelcoding.dailydose;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -15,14 +16,13 @@ public class AlarmManager {
         Intent intent = new Intent(context, FeedChecker.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         android.app.AlarmManager alarmManager = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    //        Calendar debugCal = nextCalendarAtTime(21, 37);
+        Calendar alarmCal = nextCalendarAtTime(9, 0);
         alarmManager.setInexactRepeating(android.app.AlarmManager.RTC_WAKEUP,
-                nextCalendarAtTime(9, 0).getTimeInMillis(),
+                alarmCal.getTimeInMillis(),
                 android.app.AlarmManager.INTERVAL_DAY,
                 alarmIntent);
-    //        Log.e("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
+        Log.d("DDG Alarm", "Set Alarm for " + alarmCal.getTime().toString());
     }
-
 
     private static Calendar nextCalendarAtTime(int hour, int minute){
         Calendar now = Calendar.getInstance();
