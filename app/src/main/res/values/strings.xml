@@ -6,4 +6,5 @@
     <string name="continue_watching">Continue watching</string>
     <string name="loading_episodes">Loading Episodes...</string>
     <string name="no_internet">No internet connection.</string>
+    <string name="download_error">Unable to fetch episodes from Daily Dose.</string>
 </resources>

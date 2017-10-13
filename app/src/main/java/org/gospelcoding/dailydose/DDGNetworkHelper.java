@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
@@ -78,7 +79,8 @@ public class DDGNetworkHelper {
 
             @Override
             public void onError() {
-
+                Toast failToast = Toast.makeText(context, context.getString(R.string.download_error), Toast.LENGTH_LONG);
+                failToast.show();
                 Log.e("DDG RSS Error", "Some error - Do we get here when we run out of episodes?");
             }
         });
