@@ -1,8 +1,6 @@
 package org.gospelcoding.dailydose;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -15,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class VideoListActivity extends AppCompatActivity {
@@ -34,7 +31,7 @@ public class VideoListActivity extends AppCompatActivity {
 
         networkHelper = new DDGNetworkHelper(this);
 
-        setAlarmIfNecessary();
+        AlarmManager.setAlarmIfNecessary(this);
     }
 
     @Override
@@ -69,30 +66,6 @@ public class VideoListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PlayEpisodeActivity.class);
         intent.putExtra(PlayEpisodeActivity.EPISODE_ID_EXTRA, episode.getId());
         startActivity(intent);
-    }
-
-    private void setAlarmIfNecessary(){
-        Intent intent = new Intent(this, FeedChecker.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-//        Calendar debugCal = nextCalendarAtTime(21, 37);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                         nextCalendarAtTime(9, 0).getTimeInMillis(),
-                                         AlarmManager.INTERVAL_DAY,
-                                         alarmIntent);
-//        Log.e("DDG Alarm", "Set Alarm for " + debugCal.getTime().toString());
-    }
-
-    private Calendar nextCalendarAtTime(int hour, int minute){
-        Calendar now = Calendar.getInstance();
-        Calendar rVal = Calendar.getInstance();
-        rVal.set(Calendar.HOUR_OF_DAY, hour);
-        rVal.set(Calendar.MINUTE, minute);
-        int offset = rVal.getTimeZone().getRawOffset();
-        rVal.add(Calendar.MILLISECOND, offset);
-        if(now.getTimeInMillis() > rVal.getTimeInMillis())
-            rVal.add(Calendar.DAY_OF_MONTH, 1);
-        return rVal;
     }
 
     private void setupEpisodesAdapter(List<Episode> episodes){
