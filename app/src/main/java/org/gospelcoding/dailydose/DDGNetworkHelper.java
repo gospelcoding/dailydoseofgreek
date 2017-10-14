@@ -79,9 +79,14 @@ public class DDGNetworkHelper {
 
             @Override
             public void onError() {
-                Toast failToast = Toast.makeText(context, context.getString(R.string.download_error), Toast.LENGTH_LONG);
-                failToast.show();
-                Log.e("DDG RSS Error", "Some error - Do we get here when we run out of episodes?");
+                Log.e("DDG RSS Error", "What can cause this?");
+                ((VideoListActivity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast failToast = Toast.makeText(context, context.getString(R.string.download_error), Toast.LENGTH_LONG);
+                        failToast.show();
+                    }
+                });
             }
         });
     }
