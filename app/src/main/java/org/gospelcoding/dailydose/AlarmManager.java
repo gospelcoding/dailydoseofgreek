@@ -3,8 +3,13 @@ package org.gospelcoding.dailydose;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 
 /**
@@ -21,7 +26,9 @@ public class AlarmManager {
                 alarmCal.getTimeInMillis(),
                 android.app.AlarmManager.INTERVAL_DAY,
                 alarmIntent);
-        Log.d("DDG Alarm", "Set Alarm for " + alarmCal.getTime().toString());
+        String message = "Set Alarm for " + alarmCal.getTime().toString();
+        logAlarmMessage(context, message);
+        Log.d("DDG Alarm", message);
     }
 
     private static Calendar nextCalendarAtTime(int hour, int minute){
@@ -34,5 +41,21 @@ public class AlarmManager {
         if(now.getTimeInMillis() > rVal.getTimeInMillis())
             rVal.add(Calendar.DAY_OF_MONTH, 1);
         return rVal;
+    }
+
+    public static void logAlarmMessage(Context context, String message){
+        try {
+            File dir = Environment.getExternalStoragePublicDirectory("daily-dose-logs");
+            dir.mkdirs();
+            String filename = context.getPackageName() + ".alarm-log";
+            String fullPath = dir.getPath() + File.separator + filename;
+            BufferedWriter out = new BufferedWriter(new FileWriter(fullPath, true));
+            out.newLine();
+            out.write(message);
+            out.close();
+        }
+        catch (IOException e){
+            Log.e("DDG-Alarm", e.getStackTrace().toString());
+        }
     }
 }

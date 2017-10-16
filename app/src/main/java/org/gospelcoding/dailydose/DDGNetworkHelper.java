@@ -15,6 +15,7 @@ import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -92,6 +93,9 @@ public class DDGNetworkHelper {
     }
 
     private void notifyNewEpisodes(ArrayList<Episode> newEpisodes){
+        String message = "Notifying user of " + String.valueOf(newEpisodes.size()) + " new episodes at ";
+        message += Calendar.getInstance().getTime().toString();
+        AlarmManager.logAlarmMessage(context, message);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.logo_notification)
                 .setAutoCancel(true);
