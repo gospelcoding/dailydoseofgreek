@@ -11,12 +11,14 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
 public class PlayEpisodeActivity extends AppCompatActivity {
 
     public static final String EPISODE_ID_EXTRA = "org.gospelcoding.dailydose.episode_extra";
+    public static final String NO_VIDEO_FOUND = "noVideoFound";
 
     HTML5WebView webView;
     Episode episode;
@@ -54,12 +56,17 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         webView.getSettings().setPluginState(WebSettings.PluginState.OFF);
         webView.getSettings().setAllowFileAccess(true);
 
-        String html;
-        if(episode.vimeoUrl.contains("?"))  //The youtube video src urls have a ? already. For vimeo we add it.
-            html = html1 + episode.vimeoUrl + html2youtube + html3;
-        else
-            html = html1 + episode.vimeoUrl + html2vimeo + html3;
-        webView.loadData(html, "text/html", null);
+        if(episode.vimeoUrl == NO_VIDEO_FOUND){
+            webView.loadUrl(episode.ddgUrl);
+        }
+        else {
+            String html;
+            if (episode.vimeoUrl.contains("?"))  //The youtube video src urls have a ? already. For vimeo we add it.
+                html = html1 + episode.vimeoUrl + html2youtube + html3;
+            else
+                html = html1 + episode.vimeoUrl + html2vimeo + html3;
+            webView.loadData(html, "text/html", null);
+        }
 
         setContentView(webView.getLayout());
     }
@@ -78,7 +85,10 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         protected String doInBackground(Void... params){
             try {
                 Document doc = Jsoup.connect(episode.ddgUrl).get();
-                Element iframe = doc.select("iframe").first();
+                Elements iframes = doc.select("iframe");
+                if(iframes.size() == 0)
+                    return NO_VIDEO_FOUND;
+                Element iframe = iframes.first();
                 String vimeoUrl = iframe.attr("src");
                 return vimeoUrl;
             } catch (IOException e) {
