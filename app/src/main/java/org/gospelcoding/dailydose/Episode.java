@@ -38,8 +38,10 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     }
 
     private void setBibleData(){
-        //Title for episodes about verses come in the format "{Book} {Chap}-{Verse}"
-        Pattern chapterVerse = Pattern.compile("(.+) (\\d{1,3})-(\\d{1,3})");
+        // Title for episodes about verses come in the format "{Book} {Chap}-{Verse}"
+        // A : used to be used as the seperator.
+        // Hebrew edition has all kinds of wacky stuff after the verse number
+        Pattern chapterVerse = Pattern.compile("(.+) (\\d{1,3})[-:](\\d{1,3})");
         Matcher m = chapterVerse.matcher(title);
         if(!m.find())
             return;
