@@ -1,5 +1,9 @@
 package org.gospelcoding.dailydose;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.prof.rssparser.Article;
@@ -30,23 +34,24 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     public Episode(){
     }
 
-    public Episode(String newTitle, String newDdgUrl, Date newPubDate){
+    public Episode(Context context, String newTitle, String newDdgUrl, Date newPubDate){
         title = newTitle;
         ddgUrl = newDdgUrl;
         pubDate = newPubDate.getTime();
-        setBibleData();
+        setBibleData(context);
     }
 
-    private void setBibleData(){
+    private void setBibleData(Context context){
         // Title for episodes about verses come in the format "{Book} {Chap}-{Verse}"
         // A : used to be used as the seperator.
         // Hebrew edition has all kinds of wacky stuff after the verse number
         Pattern chapterVerse = Pattern.compile("(.+) (\\d{1,3})[-:](\\d{1,3})");
         Matcher m = chapterVerse.matcher(title);
-        if(!m.find())
-            return;
-        bibleBook = m.group(1);
-        bibleChapter = Integer.parseInt(m.group(2));
+        if(m.find()) {
+            bibleBook = BibleBook.getBibleBook(context, m.group(1));
+            bibleChapter = Integer.parseInt(m.group(2));
+            //Log.e("Match", "Book: " + m.group(1) + ". Chapter: " + m.group(2));
+        }
     }
 
     public boolean saveIfNew(){
@@ -63,10 +68,11 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         return pubDate < e.pubDate;
     }
 
-    public static ArrayList<Episode> saveEpisodesFromRSS(ArrayList<Article> articles){
+    public static ArrayList<Episode> saveEpisodesFromRSS(Context context, ArrayList<Article> articles){
         ArrayList<Episode> newEpisodes = new ArrayList<Episode>();
         for (Article article: articles) {
-            Episode episode = new Episode(article.getTitle(),
+            Episode episode = new Episode(context,
+                                            article.getTitle(),
                                             article.getLink(),
                                             article.getPubDate());
             if(episode.saveIfNew())
@@ -98,6 +104,7 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         return title;
     }
 
+    @Nullable
     private static Episode findFeaturedEpisode(){
         List<Episode> watchedEpisodes = find(Episode.class, "last_watched != 0", null, null, "last_watched DESC", null);
         int i = 0;

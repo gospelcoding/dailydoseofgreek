@@ -64,7 +64,7 @@ public class DDGNetworkHelper {
         parser.onFinish(new Parser.OnTaskCompleted() {
             @Override
             public void onTaskCompleted(ArrayList<Article> articleList) {
-                ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(articleList);
+                ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(context, articleList);
                 if(fetchType == INITIAL_FETCH)
                     newEpisodesList(newEpisodes);
                 if(episodesAdapter != null)

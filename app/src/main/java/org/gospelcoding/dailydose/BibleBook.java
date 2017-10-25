@@ -30,17 +30,10 @@ public class BibleBook {
         }
     }
 
-    @Nullable
     private static BufferedReader reader(Context context){
-        try{
-            AssetManager assetManager = context.getAssets();
-            InputStream input = assetManager.open(FILENAME);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            return reader;
-        }
-        catch (IOException e){
-            return null;
-        }
+        InputStream input = context.getResources().openRawResource(R.raw.bible_books);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        return reader;
     }
 
     @Nullable
@@ -48,10 +41,13 @@ public class BibleBook {
         possibleBook = possibleBook.toLowerCase();
         String bookName = reader.readLine();
         while(bookName != null){
-            if(bookName.toLowerCase().contains(possibleBook))
+            if(bookName.toLowerCase().contains(possibleBook)) {
+                // Log.e("Match", possibleBook + " to " + bookName);
                 return bookName;
+            }
             bookName = reader.readLine();
         }
+        // Log.e("Match", "None for " + possibleBook);
         return null;
 
     }
