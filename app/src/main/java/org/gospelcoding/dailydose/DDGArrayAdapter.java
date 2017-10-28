@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,34 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> {
         super(context, -1, episodes);
         this.context = context;
         this.episodes = episodes;
+    }
+
+    public List<String> bookNames(){
+        List<String> bookNames = new ArrayList<String>();
+        for(Episode e : episodes){
+            if(e.bibleBook != null && !bookNames.contains(e.bibleBook)){
+                int i =0;
+                while(i<bookNames.size() && e.bibleBook.compareTo(bookNames.get(i)) > 0)
+                    ++i;
+                bookNames.add(i, e.bibleBook);
+            }
+        }
+        return bookNames;
+    }
+
+    public List<Integer> chapterNumbers(String bookName){
+        List<Integer> chapters = new ArrayList<Integer>();
+        for(Episode e :episodes){
+            // String chapter = e.bibleChapter
+            Integer chapter = e.bibleChapter;
+            if(bookName.equals(e.bibleBook) && !chapters.contains(chapter)){
+                int i=0;
+                while(i<chapters.size() && chapter.compareTo(chapters.get(i)) > 0)
+                    ++i;
+                chapters.add(i, chapter);
+            }
+        }
+        return chapters;
     }
 
     @Override
