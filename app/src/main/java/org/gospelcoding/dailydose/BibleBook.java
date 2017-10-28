@@ -51,4 +51,15 @@ public class BibleBook {
         return null;
 
     }
+    
+    public static List<String> getBookNames(Context context){
+        List<String> bookNames = new ArrayList<String>();
+        BufferedReader reader = reader(context);
+        String bookName = reader.readLine();
+        while(bookName != null){
+            bookNames.add(bookName);
+            bookName = reader.readLine();
+        }
+        return bookNames;
+    }
 }
