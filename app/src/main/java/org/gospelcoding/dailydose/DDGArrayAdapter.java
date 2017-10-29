@@ -34,12 +34,10 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> {
         List<String> bookNames = new ArrayList<String>();
         for(Episode e : episodes){
             if(e.bibleBook != null && !bookNames.contains(e.bibleBook)){
-                int i =0;
-                while(i<bookNames.size() && e.bibleBook.compareTo(bookNames.get(i)) > 0)
-                    ++i;
-                bookNames.add(i, e.bibleBook);
+                bookNames.add(e.bibleBook);
             }
         }
+        bookNames = BibleBook.sort(context, bookNames);
         return bookNames;
     }
 

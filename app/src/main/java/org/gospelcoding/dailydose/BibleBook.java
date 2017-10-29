@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rick on 10/24/17.
@@ -52,13 +54,32 @@ public class BibleBook {
 
     }
     
-    public static List<String> getBookNames(Context context){
-        List<String> bookNames = new ArrayList<String>();
-        BufferedReader reader = reader(context);
-        String bookName = reader.readLine();
-        while(bookName != null){
-            bookNames.add(bookName);
-            bookName = reader.readLine();
+    public static List<String> getBookNames(Context context) {
+        try {
+            List<String> bookNames = new ArrayList<String>();
+            BufferedReader reader = reader(context);
+            String bookName = reader.readLine();
+            while (bookName != null) {
+                bookNames.add(bookName);
+                bookName = reader.readLine();
+            }
+            return bookNames;
+        }
+        catch(IOException e){
+            Log.e("BibleBook", "IOException in BibleBook.getBookNames");
+            Log.e("BibleBook", e.getMessage());
+            return null;
+        }
+    }
+
+    public static List<String> sort(Context context, List<String> bookNamesToInclude){
+        List<String> bookNames = getBookNames(context);
+        int i = 0;
+        while(i < bookNames.size()){
+            if(!bookNamesToInclude.contains(bookNames.get(i)))
+                bookNames.remove(i);
+            else
+                ++i;
         }
         return bookNames;
     }
