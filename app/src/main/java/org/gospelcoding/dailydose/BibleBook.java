@@ -43,8 +43,8 @@ public class BibleBook {
         possibleBook = possibleBook.toLowerCase();
         String bookName = reader.readLine();
         while(bookName != null){
-            if(bookName.toLowerCase().contains(possibleBook)) {
-                // Log.e("Match", possibleBook + " to " + bookName);
+            bookName = bookName.toLowerCase();
+            if(bookName.contains(possibleBook) || possibleBook.contains(bookName)) {
                 return bookName;
             }
             bookName = reader.readLine();

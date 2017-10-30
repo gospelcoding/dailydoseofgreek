@@ -99,7 +99,7 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     public void updateChapterSpinner(){
         Spinner bookNamesSpinner = (Spinner) findViewById(R.id.book_spinner);
         String bookName = (String) bookNamesSpinner.getSelectedItem();
-        List<Integer> chapters = episodesAdapter.chapterNumbers(bookName);
+        List<String> chapters = episodesAdapter.chapterNumbers(bookName);
         chaptersAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, chapters);
         Spinner chaptersSpinner = (Spinner) findViewById(R.id.chapter_spinner);
         chaptersSpinner.setAdapter(chaptersAdapter);
@@ -107,12 +107,23 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void onBookSelected(String bookName){
-        Toast.makeText(this, "Selected: " + bookName, Toast.LENGTH_SHORT).show();
-        updateChapterSpinner();
+        Spinner chapterSpinner = (Spinner) findViewById(R.id.chapter_spinner);
+        if(bookName.equals(DDGArrayAdapter.ALL) || bookName.equals(DDGArrayAdapter.SPECIALS)){
+            chapterSpinner.setVisibility(View.INVISIBLE);
+            episodesAdapter.getFilter().filter(bookName);
+        }
+        else{
+            updateChapterSpinner();
+            chapterSpinner.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void onChapterSelected(Integer chapter){
-        Toast.makeText(this, "Selected: " + chapter.toString(), Toast.LENGTH_SHORT).show();
+    private void onChapterSelected(String chapter){
+        String bookName = (String) ((Spinner) findViewById(R.id.book_spinner)).getSelectedItem();
+        if(chapter == DDGArrayAdapter.ALL)
+            episodesAdapter.getFilter().filter(bookName);
+        else
+            episodesAdapter.getFilter().filter(bookName + ":" + chapter);
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
@@ -122,7 +133,7 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         if(parent == bookNamesSpinner)
             onBookSelected((String) parent.getSelectedItem());
         else if(parent == chaptersSpinner)
-            onChapterSelected((Integer) parent.getSelectedItem());
+            onChapterSelected((String) parent.getSelectedItem());
         else
             Log.e("Spinners", "VideoListActivity.onItemSelected() called for neither bookNamesSpinnner nor chaptersSpinner");
     }
