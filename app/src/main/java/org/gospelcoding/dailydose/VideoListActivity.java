@@ -25,6 +25,8 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     public static final String SHARED_PREFERENCES_TAG = "org.gospelcoding.dailydose.Shared_Prefs";
     public static final String DOWNLOADED_ALL = "downloadedAll";
 
+    private boolean chapterSpinnerFrozen = false;
+
     DDGArrayAdapter episodesAdapter;
     ArrayAdapter bookNamesAdapter;
     ArrayAdapter chaptersAdapter;
@@ -86,6 +88,24 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         }
     }
 
+    public void updateSpinners(String bookName, String chapter){
+        Spinner bookSpinner = (Spinner) findViewById(R.id.book_spinner);
+        Spinner chapterSpinner = (Spinner) findViewById(R.id.chapter_spinner);
+
+        if(bookNamesAdapter.getPosition(bookName) < 0) {
+            String selectedBookName = (String) bookSpinner.getSelectedItem();
+            episodesAdapter.insertBookName(bookNamesAdapter, bookName);
+            chapterSpinnerFrozen = true;
+            bookSpinner.setSelection(bookNamesAdapter.getPosition(selectedBookName));
+        }
+
+        else if(bookSpinner.getSelectedItem().equals(bookName) && chaptersAdapter.getPosition(chapter) < 0) {
+            String selectedChapter = (String) chapterSpinner.getSelectedItem();
+            episodesAdapter.insertChapter(chaptersAdapter, chapter);
+            chapterSpinner.setSelection(chaptersAdapter.getPosition(selectedChapter));
+        }
+    }
+
     private void setupSpinners(){
         List<String> bookNames = episodesAdapter.bookNames();
         bookNamesAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, bookNames);
@@ -113,9 +133,11 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
             episodesAdapter.getFilter().filter(bookName);
         }
         else{
-            updateChapterSpinner();
+            if(!chapterSpinnerFrozen)
+                updateChapterSpinner();
             chapterSpinner.setVisibility(View.VISIBLE);
         }
+        chapterSpinnerFrozen = false;
     }
 
     private void onChapterSelected(String chapter){

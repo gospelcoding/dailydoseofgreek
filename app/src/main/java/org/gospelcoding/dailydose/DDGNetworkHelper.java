@@ -163,10 +163,7 @@ public class DDGNetworkHelper {
 
     private void addEpisodesToAdapter(ArrayList<Episode> newEpisodes){
         for (Episode episode : newEpisodes){
-            int i = 0;
-            while(i < episodesAdapter.getCount() && (episodesAdapter.getItem(i).featured || episode.olderThan(episodesAdapter.getItem(i))))
-                ++i;
-            episodesAdapter.insert(episode, i);
+            episodesAdapter.insert(episode);
         }
     }
 

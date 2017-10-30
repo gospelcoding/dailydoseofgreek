@@ -28,6 +28,7 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
     private List<Episode> episodes;
     private List<Episode> allEpisodes;
     private ItemFilter itemFilter = new ItemFilter();
+    private BibleBook bibleBook;
     public final static String ALL = "All";
     public final static String SPECIALS = "Specials";
 
@@ -36,6 +37,7 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
         this.context = context;
         this.episodes = episodes;
         this.allEpisodes = episodes;
+        this.bibleBook = new BibleBook(context);
     }
 
     public List<String> bookNames(){
@@ -45,7 +47,7 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
                 bookNames.add(e.bibleBook);
             }
         }
-        bookNames = BibleBook.sort(context, bookNames);
+        bookNames = bibleBook.sort(bookNames);
         bookNames.add(0, ALL);
         bookNames.add(SPECIALS);
         return bookNames;
@@ -97,6 +99,40 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
         return episodes.size();
     }
 
+//    public void insert(Episode e, int i){
+//        super.insert(e, i);
+//        if(e.bibleBook != null)
+//            ((VideoListActivity) context).updateSpinners(e.bibleBook, String.valueOf(e.bibleChapter));
+//    }
+    public void insert(Episode e){
+        if(episodes != allEpisodes && itemFilter.passesFilter(e)){
+            int i=0;
+            while(i<episodes.size() && e.olderThan(episodes.get(i)))
+                ++i;
+            episodes.add(i, e);
+        }
+        int i=0;
+        while(i<allEpisodes.size() && e.olderThan(allEpisodes.get(i)))
+            ++i;
+        allEpisodes.add(i, e);
+        notifyDataSetChanged();
+
+        if(e.bibleBook != null)
+            ((VideoListActivity) context).updateSpinners(e.bibleBook, String.valueOf(e.bibleChapter));
+    }
+
+    public void insertBookName(ArrayAdapter<String> bookNamesAdapter, String bookName){
+        bibleBook.insertBookName(bookNamesAdapter, bookName);
+    }
+
+    public void insertChapter(ArrayAdapter<String> chaptersAdapter, String chapter){
+        int i=1; // After "All"
+        int chapterInt = Integer.parseInt(chapter);
+        while(i < chaptersAdapter.getCount() && Integer.parseInt(chaptersAdapter.getItem(i)) < chapterInt)
+            ++i;
+        chaptersAdapter.insert(chapter, i);
+    }
+
     public Filter getFilter(){
         return itemFilter;
     }
@@ -125,7 +161,7 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
             return results;
         }
 
-        private boolean passesFilter(Episode episode){
+        public boolean passesFilter(Episode episode){
             if(bookName == SPECIALS && episode.bibleBook == null)
                 return true;
             if(bookName.equals(episode.bibleBook))

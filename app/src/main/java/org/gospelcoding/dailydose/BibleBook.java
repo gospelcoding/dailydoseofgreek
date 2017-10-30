@@ -1,9 +1,9 @@
 package org.gospelcoding.dailydose;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +18,12 @@ import java.util.List;
 
 public class BibleBook {
     private static final String FILENAME = "bible_book";
+
+    private List<String> bookNames;
+
+    public BibleBook(Context context){
+        bookNames = readBookNamesFromFile(context);
+    }
 
     @Nullable
     public static String getBibleBook(Context context, String possibleBook){
@@ -43,8 +49,8 @@ public class BibleBook {
         possibleBook = possibleBook.toLowerCase();
         String bookName = reader.readLine();
         while(bookName != null){
-            bookName = bookName.toLowerCase();
-            if(bookName.contains(possibleBook) || possibleBook.contains(bookName)) {
+            String bookNameDowncase = bookName.toLowerCase();
+            if(bookNameDowncase.contains(possibleBook) || possibleBook.contains(bookNameDowncase)) {
                 return bookName;
             }
             bookName = reader.readLine();
@@ -54,7 +60,7 @@ public class BibleBook {
 
     }
     
-    public static List<String> getBookNames(Context context) {
+    public static List<String> readBookNamesFromFile(Context context) {
         try {
             List<String> bookNames = new ArrayList<String>();
             BufferedReader reader = reader(context);
@@ -72,15 +78,24 @@ public class BibleBook {
         }
     }
 
-    public static List<String> sort(Context context, List<String> bookNamesToInclude){
-        List<String> bookNames = getBookNames(context);
-        int i = 0;
-        while(i < bookNames.size()){
-            if(!bookNamesToInclude.contains(bookNames.get(i)))
-                bookNames.remove(i);
-            else
-                ++i;
+    public List<String> sort(List<String> bookNamesToInclude){
+        List<String> sortedList = new ArrayList<>(bookNamesToInclude.size());
+        for(String bookName : bookNames){
+            if(bookNamesToInclude.contains(bookName))
+                sortedList.add(bookName);
         }
-        return bookNames;
+        return sortedList;
+    }
+
+    public void insertBookName(ArrayAdapter<String> bookNamesAdapter, String insertBook){
+        int index = 1; //After "All"
+        for(String checkBook : bookNames){
+            if(checkBook.equals(insertBook)){
+                bookNamesAdapter.insert(insertBook, index);
+                return;
+            }
+            if(bookNamesAdapter.getItem(index).equals(checkBook))
+                ++index;
+        }
     }
 }
