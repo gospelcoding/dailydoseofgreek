@@ -24,6 +24,7 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     public static final String VIMEO_URL_EXTRA = "org.gospelcoding.dailydose.vimeo_url";
     public static final String SHARED_PREFERENCES_TAG = "org.gospelcoding.dailydose.Shared_Prefs";
     public static final String DOWNLOADED_ALL = "downloadedAll";
+    public static final String VERSION = "version";
 
     private boolean chapterSpinnerFrozen = false;
 
@@ -40,12 +41,31 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         networkHelper = new DDGNetworkHelper(this);
 
         AlarmManager.setAlarmIfNecessary(this);
+
+        processUpdate();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         new LoadEpisodesFromDB().execute();
+    }
+
+    private void processUpdate(){
+        SharedPreferences values = getSharedPreferences(SHARED_PREFERENCES_TAG, 0);
+        int lastVersion = values.getInt(VERSION, 0);
+
+        // We want to remove this once everybody is >= 9 (0.8)
+        if(lastVersion < 9){
+            Episode.updateBibleBookNames(this);
+        }
+    }
+
+    public void updateProcessed(){
+        int currentVersion = BuildConfig.VERSION_CODE;
+        SharedPreferences.Editor valuesEditor = getSharedPreferences(SHARED_PREFERENCES_TAG, 0).edit();
+        valuesEditor.putInt(VERSION, currentVersion);
+        valuesEditor.commit();
     }
 
     public void setListView(ArrayList<Episode> episodes){

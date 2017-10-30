@@ -1,6 +1,7 @@
 package org.gospelcoding.dailydose;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -122,6 +123,32 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         }
         return null;
     }
+
+    public static void  updateBibleBookNames(VideoListActivity videoListActivity){
+        (new BibleBookNameUpdater(videoListActivity)).execute();
+    }
+
+    private static class BibleBookNameUpdater extends AsyncTask<Void, Void, Void> {
+
+        private VideoListActivity videoListActivity;
+        public BibleBookNameUpdater(VideoListActivity videoListActivity){
+            this.videoListActivity = videoListActivity;
+        }
+
+        protected Void doInBackground(Void... params){
+            List<Episode> episodes = find(Episode.class, null, null, null, null, null);
+            for(Episode episode : episodes){
+                episode.setBibleData(videoListActivity);
+                episode.save();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void v){
+            videoListActivity.updateProcessed();
+        }
+    }
+
 //    public static void debugDeleteMostReccentEpisode(){
 //       List<Episode> episodes = find(Episode.class, null, null, null, "pub_date DESC", null);
 //        Episode e = episodes.get(0);
