@@ -95,10 +95,22 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
     }
 
     @Override
+    public Episode getItem(int position){
+        return episodes.get(position);
+    }
+
+    @Override
     public int getCount(){
         return episodes.size();
     }
 
+    public Episode getNewestById(){
+        Episode newest = allEpisodes.get(0);
+        for(Episode e : allEpisodes)
+            if(newest.getId().compareTo(e.getId()) < 0)
+                newest = e;
+        return newest;
+    }
 //    public void insert(Episode e, int i){
 //        super.insert(e, i);
 //        if(e.bibleBook != null)
@@ -107,18 +119,58 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
     public void insert(Episode e){
         if(episodes != allEpisodes && itemFilter.passesFilter(e)){
             int i=0;
-            while(i<episodes.size() && e.olderThan(episodes.get(i)))
+            while(i<episodes.size() && (episodes.get(i).featured || e.olderThan(episodes.get(i))))
                 ++i;
             episodes.add(i, e);
         }
         int i=0;
-        while(i<allEpisodes.size() && e.olderThan(allEpisodes.get(i)))
+        while(i<allEpisodes.size() && (allEpisodes.get(i).featured || e.olderThan(allEpisodes.get(i))))
             ++i;
         allEpisodes.add(i, e);
         notifyDataSetChanged();
 
         if(e.bibleBook != null)
             ((VideoListActivity) context).updateSpinners(e.bibleBook, String.valueOf(e.bibleChapter));
+    }
+
+    public void setFeaturedEpisode(Episode featured) {
+        removeFeatured(allEpisodes);
+        removeFeatured(episodes);
+
+        if (featured != null) {
+            setFeaturedEpisode(allEpisodes, featured);
+            if(episodes != allEpisodes && itemFilter.passesFilter(featured))
+                setFeaturedEpisode(episodes, featured);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    private void removeFeatured(List<Episode> eList){
+        Episode first = eList.get(0);
+        if (first.featured) {
+            if (eList.size() > 1 && first.olderThan(eList.get(1)))
+                eList.remove(0);
+            else
+                first.featured = false;
+        }
+    }
+
+    private void setFeaturedEpisode(List<Episode> eList, Episode featured){
+        if(eList.get(0).equals(featured))
+            eList.get(0).featured = true;
+        else
+            eList.add(0, featured);
+    }
+
+    public void markWatched(Episode watched){
+        for(Episode e : allEpisodes)
+            if(e.equals(watched))
+                e.lastWatched = System.currentTimeMillis();
+        if(episodes != allEpisodes)
+            for(Episode e : episodes)
+                if(e.equals(watched))
+                    e.lastWatched = System.currentTimeMillis();
     }
 
     public void insertBookName(ArrayAdapter<String> bookNamesAdapter, String bookName){
@@ -155,6 +207,11 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
                 if(passesFilter(episode))
                     filteredEpisodes.add(episode);
             }
+
+            // This can happen with featured episodes
+            if(filteredEpisodes.size() > 1 && filteredEpisodes.get(1).equals(filteredEpisodes.get(0)))
+                filteredEpisodes.remove(1);
+
             FilterResults results = new FilterResults();
             results.values = filteredEpisodes;
             results.count = filteredEpisodes.size();
@@ -162,6 +219,8 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
         }
 
         public boolean passesFilter(Episode episode){
+            if(bookName == null)
+                return true;
             if(bookName == SPECIALS && episode.bibleBook == null)
                 return true;
             if(bookName.equals(episode.bibleBook))

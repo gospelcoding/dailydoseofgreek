@@ -47,15 +47,18 @@ public class BibleBook {
     @Nullable
     private static String getBibleBook(BufferedReader reader, String possibleBook) throws IOException {
         possibleBook = possibleBook.toLowerCase();
+        String secondChoice = null;
         String bookName = reader.readLine();
         while(bookName != null){
             String bookNameDowncase = bookName.toLowerCase();
-            if(bookNameDowncase.contains(possibleBook) || possibleBook.contains(bookNameDowncase)) {
+            if(bookNameDowncase.contains(possibleBook))
                 return bookName;
-            }
+            if(possibleBook.contains(bookNameDowncase))
+                secondChoice = bookName;
             bookName = reader.readLine();
         }
-        // Log.e("Match", "None for " + possibleBook);
+        if(secondChoice != null)
+            return secondChoice;
         return null;
 
     }

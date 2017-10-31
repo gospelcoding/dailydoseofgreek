@@ -42,13 +42,18 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
 
         AlarmManager.setAlarmIfNecessary(this);
 
+        new LoadEpisodesFromDB().execute();
+
         processUpdate();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        new LoadEpisodesFromDB().execute();
+        if(episodesAdapter != null && episodesAdapter.getCount() > 1) {
+            Episode.updateEpisodeList(episodesAdapter);
+            fetchNewEpisodes(episodesAdapter.getCount());
+        }
     }
 
     private void processUpdate(){
@@ -82,9 +87,10 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CheckBox watched = (CheckBox) view.findViewById(R.id.watched_checkbox);
-            watched.setChecked(true);
+//            CheckBox watched = (CheckBox) view.findViewById(R.id.watched_checkbox);
+//            watched.setChecked(true);
             Episode clickedEpisode = episodesAdapter.getItem(position);
+            episodesAdapter.markWatched(clickedEpisode);
             launchPlayEpisodeActivity(clickedEpisode);
         }
     };
@@ -115,8 +121,10 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         if(bookNamesAdapter.getPosition(bookName) < 0) {
             String selectedBookName = (String) bookSpinner.getSelectedItem();
             episodesAdapter.insertBookName(bookNamesAdapter, bookName);
-            chapterSpinnerFrozen = true;
-            bookSpinner.setSelection(bookNamesAdapter.getPosition(selectedBookName));
+            if(!((String) bookSpinner.getSelectedItem()).equals(selectedBookName)) {
+                chapterSpinnerFrozen = true;
+                bookSpinner.setSelection(bookNamesAdapter.getPosition(selectedBookName));
+            }
         }
 
         else if(bookSpinner.getSelectedItem().equals(bookName) && chaptersAdapter.getPosition(chapter) < 0) {

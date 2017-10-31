@@ -42,6 +42,10 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
         setBibleData(context);
     }
 
+    public boolean equals(Episode other){
+        return (id != null && id.equals(other.id));
+    }
+
     private void setBibleData(Context context){
         // Title for episodes about verses come in the format "{Book} {Chap}-{Verse}"
         // A : used to be used as the seperator.
@@ -95,6 +99,16 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
 
         }
         return episodes;
+    }
+
+    public static void updateEpisodeList(DDGArrayAdapter episodesAdapter) {
+        Episode newestOnList = episodesAdapter.getNewestById();
+        String[] args = {String.valueOf(newestOnList.id)};
+        List<Episode> newerEpisodes = find(Episode.class, "id > ?", args, null, null, null);
+        for (Episode e : newerEpisodes)
+            episodesAdapter.insert(e);
+
+        episodesAdapter.setFeaturedEpisode(findFeaturedEpisode());
     }
 
     public String toString(){

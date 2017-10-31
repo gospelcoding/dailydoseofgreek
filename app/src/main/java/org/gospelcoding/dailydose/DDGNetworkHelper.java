@@ -67,7 +67,7 @@ public class DDGNetworkHelper {
                 ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(context, articleList);
                 if(fetchType == INITIAL_FETCH)
                     newEpisodesList(newEpisodes);
-                if(episodesAdapter != null)
+                else if(episodesAdapter != null)
                     addEpisodesToAdapter(newEpisodes);
                 if(wantMoreEpisodes(fetchType, articleList.size(), newEpisodes.size()))
                     fetchEpisodes(page + 1, fetchType);
