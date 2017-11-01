@@ -67,6 +67,9 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     }
 
     public void updateProcessed(){
+        // Relevant for upgrade from 0.6. May not always be
+        new LoadEpisodesFromDB().execute();
+
         int currentVersion = BuildConfig.VERSION_CODE;
         SharedPreferences.Editor valuesEditor = getSharedPreferences(SHARED_PREFERENCES_TAG, 0).edit();
         valuesEditor.putInt(VERSION, currentVersion);
