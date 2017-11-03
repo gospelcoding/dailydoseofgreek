@@ -109,6 +109,12 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
             episodesAdapter.insert(e);
 
         episodesAdapter.setFeaturedEpisode(findFeaturedEpisode());
+
+        Episode lastWatched = episodesAdapter.getLastWatched();
+        args[0] = String.valueOf(lastWatched.lastWatched);
+        List<Episode> toMarkWatched = find(Episode.class, "LAST_WATCHED > ?", args, null, null, null);
+        for(Episode e : toMarkWatched)
+            episodesAdapter.markWatched(e);
     }
 
     public String toString(){

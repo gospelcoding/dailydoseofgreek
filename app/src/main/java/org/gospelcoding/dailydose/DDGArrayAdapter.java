@@ -111,11 +111,15 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
                 newest = e;
         return newest;
     }
-//    public void insert(Episode e, int i){
-//        super.insert(e, i);
-//        if(e.bibleBook != null)
-//            ((VideoListActivity) context).updateSpinners(e.bibleBook, String.valueOf(e.bibleChapter));
-//    }
+
+    public Episode getLastWatched(){
+        Episode lastWatched = allEpisodes.get(0);
+        for(Episode e : allEpisodes)
+            if(lastWatched.lastWatched < e.lastWatched)
+                lastWatched = e;
+        return lastWatched;
+    }
+
     public void insert(Episode e){
         if(episodes != allEpisodes && itemFilter.passesFilter(e)){
             int i=0;
@@ -171,6 +175,7 @@ public class DDGArrayAdapter extends ArrayAdapter<Episode> implements Filterable
             for(Episode e : episodes)
                 if(e.equals(watched))
                     e.lastWatched = System.currentTimeMillis();
+        notifyDataSetChanged();
     }
 
     public void insertBookName(ArrayAdapter<String> bookNamesAdapter, String bookName){
