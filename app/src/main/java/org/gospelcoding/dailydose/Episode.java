@@ -104,7 +104,7 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     public static void updateEpisodeList(DDGArrayAdapter episodesAdapter) {
         Episode newestOnList = episodesAdapter.getNewestById();
         String[] args = {String.valueOf(newestOnList.id)};
-        List<Episode> newerEpisodes = find(Episode.class, "id > ?", args, null, null, null);
+        List<Episode> newerEpisodes = find(Episode.class, "ID > ?", args, null, null, null);
         for (Episode e : newerEpisodes)
             episodesAdapter.insert(e);
 

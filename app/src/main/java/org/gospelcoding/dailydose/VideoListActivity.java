@@ -76,9 +76,17 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         valuesEditor.commit();
     }
 
-    public void setListView(ArrayList<Episode> episodes){
-        setupEpisodesAdapter(episodes);
-        networkHelper.fetchAllEpisodes(episodesAdapter);
+    public void addNewEpisodes(ArrayList<Episode> episodes){
+        if(episodesAdapter == null) {
+            setupEpisodesAdapter(episodes);
+            networkHelper.fetchAllEpisodes();
+        }
+        else{
+            for(Episode episode : episodes){
+                episodesAdapter.insert(episode);
+            }
+        }
+
     }
 
     public void alertNoInternet(){
@@ -202,9 +210,9 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         if(existingCount == 0)
             networkHelper.initialFetchNewEpisodes(this);
         else if(!downloadedAll)
-            networkHelper.fetchAllEpisodes(episodesAdapter);
+            networkHelper.fetchAllEpisodes();
         else
-            networkHelper.fetchNewEpisodes(episodesAdapter);
+            networkHelper.fetchNewEpisodes();
     }
 
     private class LoadEpisodesFromDB extends AsyncTask<Void, Void, List<Episode>> {

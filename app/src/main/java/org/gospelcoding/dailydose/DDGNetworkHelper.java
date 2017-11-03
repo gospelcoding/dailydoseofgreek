@@ -28,19 +28,20 @@ public class DDGNetworkHelper {
     //Parser parser;
     Context context;
     VideoListActivity videoListActivity;
-    DDGArrayAdapter episodesAdapter;
+    // DDGArrayAdapter episodesAdapter;
 
     public DDGNetworkHelper(Context context){
         //parser = new Parser();
         this.context = context;
+        if(context instanceof VideoListActivity)
+            this.videoListActivity = (VideoListActivity) context;
     }
 
     public void fetchNewEpisodesAndNotify(){
         fetchEpisodes(1, FETCH_NEW_AND_NOTIFY);
     }
 
-    public void fetchNewEpisodes(DDGArrayAdapter episodesAdapter){
-        this.episodesAdapter = episodesAdapter;
+    public void fetchNewEpisodes(){
         fetchEpisodes(1, FETCH_NEW);
     }
 
@@ -49,8 +50,7 @@ public class DDGNetworkHelper {
         fetchEpisodes(1, INITIAL_FETCH);
     }
 
-    public void fetchAllEpisodes(DDGArrayAdapter episodesAdapter){
-        this.episodesAdapter = episodesAdapter;
+    public void fetchAllEpisodes(){
         fetchEpisodes(1, FETCH_ALL);
     }
 
@@ -65,10 +65,8 @@ public class DDGNetworkHelper {
             @Override
             public void onTaskCompleted(ArrayList<Article> articleList) {
                 ArrayList<Episode> newEpisodes = Episode.saveEpisodesFromRSS(context, articleList);
-                if(fetchType == INITIAL_FETCH)
-                    newEpisodesList(newEpisodes);
-                else if(episodesAdapter != null)
-                    addEpisodesToAdapter(newEpisodes);
+                if(videoListActivity != null)
+                    videoListActivity.addNewEpisodes(newEpisodes);
                 if(wantMoreEpisodes(fetchType, articleList.size(), newEpisodes.size()))
                     fetchEpisodes(page + 1, fetchType);
                 if(fetchType == FETCH_NEW_AND_NOTIFY)
@@ -158,16 +156,16 @@ public class DDGNetworkHelper {
         return urlString;
     }
 
-    private void newEpisodesList(ArrayList<Episode> newEpisodes){
-        videoListActivity.setListView(newEpisodes);
-
-    }
-
-    private void addEpisodesToAdapter(ArrayList<Episode> newEpisodes){
-        for (Episode episode : newEpisodes){
-            episodesAdapter.insert(episode);
-        }
-    }
+//    private void newEpisodesList(ArrayList<Episode> newEpisodes){
+//        videoListActivity.setListView(newEpisodes);
+//
+//    }
+//
+//    private void addEpisodesToAdapter(ArrayList<Episode> newEpisodes){
+//        for (Episode episode : newEpisodes){
+//            episodesAdapter.insert(episode);
+//        }
+//    }
 
     private boolean internetAvailable(){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
