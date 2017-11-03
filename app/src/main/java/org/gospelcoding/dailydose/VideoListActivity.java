@@ -43,8 +43,6 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         AlarmManager.setAlarmIfNecessary(this);
 
         new LoadEpisodesFromDB().execute();
-
-        processUpdate();
     }
 
     @Override
@@ -77,6 +75,8 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
     }
 
     public void addNewEpisodes(ArrayList<Episode> episodes){
+        if(episodes.size() == 0)
+            processUpdate();
         if(episodesAdapter == null) {
             setupEpisodesAdapter(episodes);
             networkHelper.fetchAllEpisodes();
