@@ -139,29 +139,13 @@ public class Episode extends SugarRecord<Episode> implements Serializable {
     }
 
     public static void  updateBibleBookNames(VideoListActivity videoListActivity){
-        (new BibleBookNameUpdater(videoListActivity)).execute();
-    }
-
-    private static class BibleBookNameUpdater extends AsyncTask<Void, Void, Void> {
-
-        private VideoListActivity videoListActivity;
-        public BibleBookNameUpdater(VideoListActivity videoListActivity){
-            this.videoListActivity = videoListActivity;
-        }
-
-        protected Void doInBackground(Void... params){
-            List<Episode> episodes = find(Episode.class, null, null, null, null, null);
-            for(Episode episode : episodes){
-                episode.setBibleData(videoListActivity);
-                episode.save();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void v){
-            videoListActivity.updateProcessed();
+        List<Episode> episodes = find(Episode.class, null, null, null, null, null);
+        for(Episode episode : episodes){
+            episode.setBibleData(videoListActivity);
+            episode.save();
         }
     }
+
 
 //    public static void debugDeleteMostReccentEpisode(){
 //       List<Episode> episodes = find(Episode.class, null, null, null, "pub_date DESC", null);

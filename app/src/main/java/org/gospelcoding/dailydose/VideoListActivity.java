@@ -38,6 +38,8 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_episodes);
 
+        processUpdate();
+
         networkHelper = new DDGNetworkHelper(this);
 
         AlarmManager.setAlarmIfNecessary(this);
@@ -62,14 +64,9 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         if(lastVersion < 9){
             Episode.updateBibleBookNames(this);
         }
-    }
-
-    public void updateProcessed(){
-        // Relevant for upgrade from 0.6. May not always be
-        new LoadEpisodesFromDB().execute();
 
         int currentVersion = BuildConfig.VERSION_CODE;
-        SharedPreferences.Editor valuesEditor = getSharedPreferences(SHARED_PREFERENCES_TAG, 0).edit();
+        SharedPreferences.Editor valuesEditor = values.edit();
         valuesEditor.putInt(VERSION, currentVersion);
         valuesEditor.commit();
     }
