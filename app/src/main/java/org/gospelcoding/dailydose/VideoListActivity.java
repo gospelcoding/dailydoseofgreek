@@ -1,8 +1,12 @@
 package org.gospelcoding.dailydose;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,6 +94,8 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         TextView noInternetTextView = (TextView) findViewById(R.id.no_internet_text);
         if(noInternetTextView != null)
             noInternetTextView.setVisibility(View.VISIBLE);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(new ConnectivityReceiver(), filter);
     }
 
     private AdapterView.OnItemClickListener episodeClickListener = new AdapterView.OnItemClickListener() {
@@ -221,6 +227,23 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
         protected void onPostExecute(List<Episode> episodes){
             setupEpisodesAdapter(episodes);
             fetchNewEpisodes(episodes.size());
+        }
+    }
+
+    private class ConnectivityReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent){
+            if (networkHelper.internetAvailable()){
+                TextView noInternetTextView = (TextView) findViewById(R.id.no_internet_text);
+                if(noInternetTextView != null)
+                    noInternetTextView.setVisibility(View.VISIBLE);
+
+                if (episodesAdapter == null)
+                    fetchNewEpisodes(0);
+                else
+                    fetchNewEpisodes(episodesAdapter.getCount());
+                context.unregisterReceiver(this);
+            }
         }
     }
 }

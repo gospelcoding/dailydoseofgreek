@@ -167,10 +167,10 @@ public class DDGNetworkHelper {
 //        }
 //    }
 
-    private boolean internetAvailable(){
+    public boolean internetAvailable(){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     private void handleNoInternet(int fetchType){
