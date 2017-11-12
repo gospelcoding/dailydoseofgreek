@@ -77,7 +77,7 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     }
 
     private void failureToast(){
-        Toast.makeText(this, "Unable to retrieve video", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Unable to retrieve video. Try checking your internet connection.", Toast.LENGTH_SHORT).show();
     }
 
     private class FetchVimeoUrlTask extends AsyncTask<Void, Void, String> {
@@ -92,7 +92,6 @@ public class PlayEpisodeActivity extends AppCompatActivity {
                 String vimeoUrl = iframe.attr("src");
                 return vimeoUrl;
             } catch (IOException e) {
-                Log.e("DDG IO Error", e.getMessage());
                 return null;
             }
         }
@@ -100,11 +99,12 @@ public class PlayEpisodeActivity extends AppCompatActivity {
         protected void onPostExecute(String vimeoUrl){
             if(vimeoUrl == null) {
                 failureToast();
-                return;
+                finish();
+            } else {
+                episode.vimeoUrl = vimeoUrl;
+                loadVideo();
+                updateVideo();
             }
-            episode.vimeoUrl = vimeoUrl;
-            loadVideo();
-            updateVideo();
         }
     }
 }
