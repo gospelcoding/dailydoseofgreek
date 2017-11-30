@@ -77,7 +77,7 @@ public class PlayEpisodeActivity extends AppCompatActivity {
     }
 
     private void failureToast(){
-        Toast.makeText(this, "Unable to retrieve video. Try checking your internet connection.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.video_download_error), Toast.LENGTH_SHORT).show();
     }
 
     private class FetchVimeoUrlTask extends AsyncTask<Void, Void, String> {

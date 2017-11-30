@@ -40,4 +40,12 @@
         android:layout_below="@id/title_view"
         android:layout_toRightOf="@id/watched_checkbox"
         android:text="Date"/>
+
+    <ImageButton
+        android:id="@+id/item_menu"
+        android:style="?android:attr/actionOverflowButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>
