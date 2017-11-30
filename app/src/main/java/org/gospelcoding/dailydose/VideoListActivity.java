@@ -11,11 +11,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,6 +218,13 @@ public class VideoListActivity extends AppCompatActivity implements AdapterView.
             networkHelper.fetchAllEpisodes();
         else
             networkHelper.fetchNewEpisodes();
+    }
+
+    public void showEpisodePopupMenu(View v){
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.episode_context_menu, popup.getMenu());
+        popup.show();
     }
 
     private class LoadEpisodesFromDB extends AsyncTask<Void, Void, List<Episode>> {

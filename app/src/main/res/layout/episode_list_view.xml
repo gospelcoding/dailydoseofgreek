@@ -43,9 +43,10 @@
 
     <ImageButton
         android:id="@+id/item_menu"
-        android:style="?android:attr/actionOverflowButtonStyle"
+        style="?android:attr/actionOverflowButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:onClick="showEpisodePopupMenu" />
 </RelativeLayout>

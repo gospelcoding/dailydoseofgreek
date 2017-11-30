@@ -9,6 +9,6 @@
     <string name="download_error">Unable to fetch episodes from Daily Dose.</string>
     <string name="video_download_error">Unable to retrieve video. Try checking your internet connection.</string>
     <string name="share">Share</string>
-    <string name="mark_watched">Mark watched</string>
-    <string name="mark_unwatched">Mark unwatched</string>
+    <string name="mark_watched">Mark Watched</string>
+    <string name="mark_unwatched">Mark Unwatched</string>
 </resources>
